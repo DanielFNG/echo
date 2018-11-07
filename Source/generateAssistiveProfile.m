@@ -22,21 +22,24 @@ end
 y = zeros(n_points, 1);
 x = linspace(0.0, 100.0, n_points);
 
+% Scale the parameters.
+rise_point = round((rise_pc/100)*n_points);
+peak_point = round((peak_pc/100)*n_points);
+fall_point = round((fall_pc/100)*n_points);
+
 % Set the rising region of y.
 lambda = (pi/2)/peak_pc;
-peak_point = round((peak_pc/100)*n_points);
 rise_trajectory = peak_force*sin(lambda*x(1:peak_point));
-y(rise_pc:peak_point) = ...
-    stretchVector(rise_trajectory, peak_point - rise_pc + 1);
+y(rise_point:peak_point) = ...
+    stretchVector(rise_trajectory, peak_point - rise_point + 1);
 
 % Set the falling region of y. 
 lambda = (pi/2)/(fall_pc - peak_pc);
-offset_point = round((fall_pc/100)*n_points);
-y(peak_point+1:offset_point-1) = ...
-    peak_force*cos(lambda*x(2:offset_point-peak_point));
+y(peak_point+1:fall_point-1) = ...
+    peak_force*cos(lambda*x(2:fall_point-peak_point));
 
 % Set the region of y which is identically zero. 
-y(offset_point+1:end) = 0;
+y(fall_point+1:end) = 0;
 
 end
 
