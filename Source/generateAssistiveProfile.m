@@ -28,18 +28,17 @@ peak_point = round((peak_pc/100)*n_points);
 fall_point = round((fall_pc/100)*n_points);
 
 % Set the rising region of y.
-lambda = (pi/2)/peak_pc;
-rise_trajectory = peak_force*sin(lambda*x(1:peak_point));
-y(rise_point:peak_point) = ...
-    stretchVector(rise_trajectory, peak_point - rise_point + 1);
+lambda = (pi/2)/(peak_pc - rise_pc);
+y(rise_point:peak_point-1) = ...
+    peak_force*sin(lambda*x(2:peak_point-rise_point+1));
 
 % Set the falling region of y. 
 lambda = (pi/2)/(fall_pc - peak_pc);
-y(peak_point+1:fall_point-1) = ...
-    peak_force*cos(lambda*x(2:fall_point-peak_point));
+y(peak_point:fall_point-1) = ...
+    peak_force*cos(lambda*x(1:fall_point-peak_point));
 
 % Set the region of y which is identically zero. 
-y(fall_point+1:end) = 0;
+y(fall_point:end) = 0;
 
 end
 
