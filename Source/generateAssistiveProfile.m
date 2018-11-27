@@ -30,7 +30,7 @@ fall_point = round((fall_pc/100)*n_points);
 % Set the rising region of y.
 lambda = (pi/2)/(peak_pc - rise_pc);
 y(rise_point:peak_point-1) = ...
-    peak_force*sin(lambda*x(2:peak_point-rise_point+1));
+    peak_force*sin(lambda*x(1:peak_point-rise_point));
 
 % Set the falling region of y. 
 lambda = (pi/2)/(fall_pc - peak_pc);
