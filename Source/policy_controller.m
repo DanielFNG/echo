@@ -1,4 +1,9 @@
-n_iterations = 7;
+save_directory = 'D:\Dropbox\PhD\HIL Control\Test-13-12-18';
+markers_saveloc = '';
+grfs_saveloc = '';
+
+total_iterations = 20;
+
 acquisition_function = 'probability-of-improvement';
 
 rise = optimizableVariable('rise', [30, 50], 'Type', 'integer');
