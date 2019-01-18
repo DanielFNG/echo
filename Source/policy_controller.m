@@ -31,7 +31,7 @@ baseline = optimizableVariable(...
     'baseline', [baseline, baseline], 'Optimize', false);
 
 % Optimisation variable construction - grouping.
-optimisation_variables = [rise, peak, fall, model];
+optimisation_variables = [rise, peak, fall, force, model, baseline];
 
 % Initialise the Bayesian optimisation with a single step. 
 iteration = 1;
@@ -53,7 +53,7 @@ while iteration < max_iterations
     catch err
         disp(err.message);
         input('Press enter when ready to retry.\n');
-        results = old_results;
+        results = old_results;  % Return to previous state. 
     end
     save('intermediate_results.mat', 'results', 'iteration');
 end

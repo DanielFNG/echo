@@ -1,3 +1,7 @@
+%% This code is wildly out of date.
+% When fixed up the way it should work is taking the results of a Bayesian
+% Optimisation run and producing the coloured plot of the control signals. 
+
 apo_controller_frequency = 100;
 gait_cycle_length = 1.0596;
 peak_force = 7.5;
