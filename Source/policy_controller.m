@@ -2,10 +2,14 @@
 save_file = 'intermediate_results.mat';
 
 % Control parameterisation settings. 
-peak_force = 10;
 rise_range = [30, 50];
 peak_range = [35, 70];
 fall_range = [40, 90];
+
+% Global variables - required to be seen within the Bayesian Optimisation.
+global peak_force = 10;
+global model_file = 'chris_scaled.osim';
+global baseline = 49.7;  % Only relevant for fixed baseline objective functions.
 
 % Bayesian optimisation settings. 
 max_iterations = 15;
@@ -13,25 +17,11 @@ acquisition_function = 'probability-of-improvement';
 objective_function = @evaluateHipROM;
 parameter_constraints = @parameterConstraints;
 
-% Subject-specific settings.
-model_file = 'chris_scaled.osim';
-baseline = 49.7;  % Only relevant for fixed baseline objective functions.
-
-% Optimisation variable construction - to be optimised.
+% Optimisation variable construction.
 rise = optimizableVariable('rise', rise_range, 'Type', 'integer');
 peak = optimizableVariable('peak', peak_range, 'Type', 'integer');
 fall = optimizableVariable('fall', fall_range, 'Type', 'integer');
-
-% Optimisation variable construction - fixed.
-force = optimizableVariable(...
-    'force', [peak_force, peak_force], 'Optimize', false);
-model = optimizableVariable(...
-    'model', {model_file}, 'Type', 'categorical', 'Optimize', false);
-baseline = optimizableVariable(...
-    'baseline', [baseline, baseline], 'Optimize', false);
-
-% Optimisation variable construction - grouping.
-optimisation_variables = [rise, peak, fall, force, model, baseline];
+optimisation_variables = [rise, peak, fall];
 
 % Initialise the Bayesian optimisation with a single step. 
 iteration = 1;
@@ -53,7 +43,7 @@ while iteration < max_iterations
     catch err
         disp(err.message);
         input('Press enter when ready to retry.\n');
-        results = old_results;  % Return to previous state. 
+        results = old_results;
     end
     save('intermediate_results.mat', 'results', 'iteration');
 end
