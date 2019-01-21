@@ -6,12 +6,20 @@ rise_range = [30, 50];
 peak_range = [35, 70];
 fall_range = [40, 90];
 
-% Global variables - required to be seen within the objective function.
+% Global variables - subject/experiment specific.
 global metric peak_force model_file baseline iteration;
 metric = 'hip_rom';
 peak_force = 10;
 model_file = 'chris_scaled.osim';
-baseline = 49.7;  % Real for fixed, 'measured' for measured.
+baseline = 49.7;  % Real for fixed, 'measured' for measured
+
+% Global variables - filestructure.
+global base_dir v_name d_name v_format d_format;
+base_dir = 'N:\Shared_Data\HIL\Protocol_Setup\21-01-19';
+v_name = 'Markers';
+d_name = 'GRFs';
+v_format = '%04i';  % # of leading 0's in Vicon (trc) filenames 
+d_format = '%04i';  % # of leading 0's in D-Flow (txt) filenames
 
 % Bayesian optimisation settings. 
 max_iterations = 15;
