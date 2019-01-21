@@ -6,10 +6,12 @@ rise_range = [30, 50];
 peak_range = [35, 70];
 fall_range = [40, 90];
 
-% Global variables - required to be seen within the Bayesian Optimisation.
-global peak_force = 10;
-global model_file = 'chris_scaled.osim';
-global baseline = 49.7;  % Only relevant for fixed baseline objective functions.
+% Global variables - required to be seen within the objective function.
+global metric peak_force model_file baseline iteration;
+metric = 'hip_rom';
+peak_force = 10;
+model_file = 'chris_scaled.osim';
+baseline = 49.7;  % Real for fixed, 'measured' for measured.
 
 % Bayesian optimisation settings. 
 max_iterations = 15;
