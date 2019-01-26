@@ -1,0 +1,33 @@
+function paths = constructPaths(settings, iteration)
+    
+    % Marker & grf file names.
+    paths.strings.marker_name = ...
+        [settings.v_name sprintf(settings.v_format, iteration)];
+    paths.strings.grf_name = ...
+        [settings.d_name sprintf(settings.d_format, iteration)];
+    
+    % Raw marker & grf files.
+    paths.files.marker_file = ...
+        [settings.base_dir filesep paths.strings.marker_name '.trc'];
+    paths.files.grf_file = ...
+        [settings.base_dir filesep paths.strings.grf_name '.txt'];
+            
+    % Processed marker & grf files.
+    paths.files.processed_markers = ...
+        [processed_dir filesep paths.strings.marker_name '.trc'];
+    paths.files.processed_grfs = ...
+        [processed_dir filesep paths.strings.grf_name '.mot'];
+            
+    % Directories for saving segmentation & OpenSim results. 
+    paths.directories.int_seg_dir = ...
+        [segment_dir filesep 'iteration' sprintf('%03i', iteration)];
+    paths.directories.osim_save_dir = ...
+        [opensim_dir filesep 'iteration' sprintf('%03i', iteration)];
+    
+    % The segmented gait data. 
+    paths.files.marker_files = ...
+        dir([paths.directories.int_seg_dir filesep '*.trc']);
+    paths.files.grf_files = ...
+        dir([paths.directories.int_seg_dir filesep '*.mot']);
+    
+end

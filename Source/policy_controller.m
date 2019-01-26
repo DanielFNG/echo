@@ -1,32 +1,35 @@
 % Save file name.
-save_file = 'intermediate_results.mat';
+settings.save_file = 'policy_controller_results.mat';
 
 % Control parameterisation settings. 
-rise_range = [30, 50];
-peak_range = [35, 70];
-fall_range = [40, 90];
+settings.rise_range = [30, 50];
+settings.peak_range = [35, 70];
+settings.fall_range = [40, 90];
 
 % Subject specific settings.
-metric = @calculateROM;
-args = {'hip_flexion_r'};
-model_file = 'C:\Users\danie\Documents\GitHub\echo\Source\chris_scaled.osim';
-baseline = 49.7;  % Real for fixed, 'measured' for measured
+settings.metric = @calculateROM;
+settings.args = {'hip_flexion_r'};
+settings.model_file = ...
+    'C:\Users\danie\Documents\GitHub\echo\Source\chris_scaled.osim';
+settings.baseline = 49.7;  % Real for fixed, 'measured' for measured
 
 % Experiment settings.
-time_delay = 16*(1/600);
-marker_rotations = {0,270,0};  
-grf_rotations = {0,90,0};
+settings.time_delay = 16*(1/600);  % Standard for UoE setup
+settings.marker_rotations = {0,270,0};  
+settings.grf_rotations = {0,90,0};
 
 % Filestructure.
-base_dir = 'F:\Dropbox\PhD\HIL Control\Automation-test\walking';
-v_name = 'markers';
-d_name = 'NE';
-v_format = '%02i';  % # of leading 0's in Vicon (trc) filenames 
-d_format = '%04i';  % # of leading 0's in D-Flow (txt) filenames
+settings.base_dir = 'F:\Dropbox\PhD\HIL Control\Automation-test\walking';
+settings.v_name = 'markers';
+settings.d_name = 'NE';
+settings.v_format = '%02i';  % # of leading 0's in Vicon (trc) filenames 
+settings.d_format = '%04i';  % # of leading 0's in D-Flow (txt) filenames
 
 % Bayesian optimisation settings. 
-max_iterations = 3;
-acquisition_function = 'probability-of-improvement';
+settings.max_iterations = 3;
+settings.acquisition_function = 'probability-of-improvement';
+settings.parameter_constraints = @parameterConstraints;
 
+% Run policy controller. 
 runPolicyController(settings);
 

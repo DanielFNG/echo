@@ -1,6 +1,6 @@
 function runPolicyController(settings)
 
-%% Create top-level results directories.
+% Create top-level filestructure.
 processed_dir = [settings.base_dir filesep 'processed'];
 segment_dir = [settings.base_dir filesep 'gait_cycles'];
 opensim_dir = [settings.base_dir filesep 'opensim'];
@@ -8,51 +8,38 @@ mkdir(processed_dir);
 mkdir(segment_dir);
 mkdir(opensim_dir);
 
-% Optimisation variable construction.
+% Construct optimisation variables. 
 rise = optimizableVariable('rise', settings.rise_range, 'Type', 'integer');
 peak = optimizableVariable('peak', settings.peak_range, 'Type', 'integer');
-fall = optimizableVariable('fall', settomgs/fall_range, 'Type', 'integer');
+fall = optimizableVariable('fall', settings.fall_range, 'Type', 'integer');
 optimisation_variables = [rise, peak, fall];
 
-% Initialise the Bayesian optimisation with a single step.
+% Initialise Bayesian optimisation with a single step, & save result.
 iteration = 1;
 results = bayesopt(@generalObjectiveFunction, ...
     optimisation_variables, ...
-    'XConstraintFcn', @parameterConstraints, ...
-    'AcquisitionFunctionName', acquisition_function, ...
+    'XConstraintFcn', settings.parameter_constraints, ...
+    'AcquisitionFunctionName', settings.acquisition_function, ...
     'MaxObjectiveEvaluations', 1, ...
     'PlotFcn', []);
-
-% Save the result of the initial BO step. 
 save(save_file, 'results', 'iteration');
 
-% Resume the Bayesian optimisation.
+% Run Bayesian optimisation for remaining steps. 
 while iteration <= max_iterations - 1
+    iteration = iteration + 1;
+    old_results = results;
     try
-        iteration = iteration + 1;
-        old_results = results;
         results = old_results.resume('MaxObjectiveEvaluations', 1);
     catch err
         disp(err.message);
         input('Press enter when ready to retry.\n');
         results = old_results;
+        iteration = iteration - 1;
     end
-    save('intermediate_results.mat', 'results', 'iteration');
+    save(settings.save_file, 'results', 'iteration');
 end
 
-        function pass = parameterConstraints(X)
-        % Constraints on Bayesian Optimisation [rise, peak, fall] parameters. 
-
-        % Assert that rise <= peak <= fall.
-        ordered_parameters = (X.rise <= X.peak) & (X.peak <= X.fall);
-
-        % Assert minimum length of applied assistance - 10% of gait cycle.
-        minimum_length = (X.fall - X.rise) > 10;
-
-        % Combine constraints. 
-        pass = ordered_parameters & minimum_length;
-
-        end
+    
 
     function result = generalObjectiveFunction(X)
         
@@ -64,30 +51,17 @@ end
         fprintf('Apply rise %i, peak %i, fall %i.\n', X.rise, X.peak, X.fall);
         beep;
         
-        % Every 2s check for the existence of the trial data.
-        marker_name = [settings.v_name sprintf(settings.v_format, iteration)];
-        grf_name = [settings.d_name sprintf(settings.d_format, iteration)];
-        marker_file = ...
-            [settings.base_dir filesep marker_name '.trc'];
-        grf_file = ...
-            [settings.base_dir filesep grf_name '.txt'];
-        while true
-            if exist(grf_file, 'file') && exist(marker_file, 'file')
-                pause(2);  % Give an additional 2s just for finishing file writing.
-                break;
-            else
-                pause(2);
-            end
+        % Construct filenames & create directories. 
+        paths = constructPaths(settings);
+        for i=1:length(paths.directories)
+            mkdir(paths.directories(i);
         end
-        % NEED ANOTHER CHECK THAT THESE ARE WRITABLE!
         
-        %% Process the files.
+        % Every 2s check for the existence of the trial data.            
+        pauseUntilWritable(paths.marker_file, 2);
+        pauseUntilWritable(paths.grf_file, 2);    
         
-        % Assign names.
-        processed_markers = [processed_dir filesep marker_name '.trc'];
-        processed_grfs = [processed_dir filesep grf_name '.mot'];
-        
-        % Processing
+        % Processing - I feel like this should probably be it's own function! Also I really would like to remove the implicit writing to file within as much of this as possible. Needless writing to file is just going to slow things down at the end of the day, no point in it if I'm just reading things back in as Data objects in the end anyway.
         int_grf = produceMOT(grf_file, settings.base_dir);
         [markers, grfs] = ...
             synchronise(marker_file, int_grf, settings.time_delay);
@@ -100,10 +74,6 @@ end
         
         %% Segmentation
         
-        int_seg_dir = ...
-            [segment_dir filesep 'iteration' sprintf('%03i', iteration)];
-        mkdir(int_seg_dir);
-        
         % Segment.
         %segment('left', 'stance', 40, processed_grfs, processed_markers, int_seg_dir);
         segment('right', 'stance', 40, processed_grfs, processed_markers, int_seg_dir);
@@ -111,20 +81,12 @@ end
         
         %% OpenSim compuations
         
-        % Obtain the markers & grf files.
-        marker_files = dir([int_seg_dir filesep '*.trc']);
-        grf_files = dir([int_seg_dir filesep '*.mot']);
-        
-        % Create directory for results storage.
-        osim_save_dir = [opensim_dir filesep 'iteration' sprintf('%03i', iteration)];
-        mkdir(osim_save_dir);
-        
         % Run appropriate OpenSim analyses.
         n_cycles = length(marker_files);
         hip_rom = zeros(1, n_cycles);
         for i=1:n_cycles
             
-            % Create directory for results storage.
+            % Directory for results storage.
             results = [osim_save_dir filesep 'cycle' sprintf('%03i', i)];
             
             % Create OpenSimTrial
