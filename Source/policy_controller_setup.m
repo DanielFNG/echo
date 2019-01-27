@@ -1,3 +1,7 @@
+% Setup script for policy controller implementation. This script should be 
+% modified to suit experiment/subject/control settings & used as the base 
+% script to run the policy controller. 
+
 % Save file name.
 settings.save_file = 'policy_controller_results.mat';
 
@@ -9,12 +13,13 @@ settings.fall_range = [40, 90];
 % Subject specific settings.
 settings.metric = @calculateROM;
 settings.args = {'hip_flexion_r'};
+settings.analyses = {'IK'};
 settings.model_file = ...
     'C:\Users\danie\Documents\GitHub\echo\Source\chris_scaled.osim';
 settings.baseline = 49.7;  % Real for fixed, 'measured' for measured
 
-% Experiment settings.
-settings.time_delay = 16*(1/600);  % Standard for UoE setup
+% Experiment settings. Currently set to standard for UoE setup.
+settings.time_delay = 16*(1/600);  
 settings.marker_rotations = {0,270,0};  
 settings.grf_rotations = {0,90,0};
 

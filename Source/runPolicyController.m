@@ -1,12 +1,14 @@
 function runPolicyController(settings)
+% Runs policy controller given adequete settings. 
+%
+% This function is designed to be called from the policy_controller_setup 
+% script.
 
 % Create top-level filestructure.
-processed_dir = [settings.base_dir filesep 'processed'];
-segment_dir = [settings.base_dir filesep 'gait_cycles'];
-opensim_dir = [settings.base_dir filesep 'opensim'];
-mkdir(processed_dir);
-mkdir(segment_dir);
-mkdir(opensim_dir);
+dirs.processed = [settings.base_dir filesep 'processed'];
+dirs.segemented = [settings.base_dir filesep 'gait_cycles'];
+dirs.opensim = [settings.base_dir filesep 'opensim'];
+createDirectories(dirs);
 
 % Construct optimisation variables. 
 rise = optimizableVariable('rise', settings.rise_range, 'Type', 'integer');
@@ -39,9 +41,19 @@ while iteration <= max_iterations - 1
     save(settings.save_file, 'results', 'iteration');
 end
 
-    
-
     function result = generalObjectiveFunction(X)
+    % General objective function for Bayesian optimisation.
+    %
+    % This is defined within this file to allow access to the settings 
+    % structure, containing necessary information such as model filename
+    % for example.
+    %
+    % This function by necessity carries out a few different steps:
+    %   1) Applies the APO torque pattern suggested by bayesopt
+    %   2) Waits for the corresponding motion data to be collected
+    %   3) Processes & segments the motion data
+    %   4) Runs the necessary OpenSim analyses on the data
+    %   5) Computes & averages the metric data for each collected gait cycle.
         
         % Communicate with APO to apply correct torque pattern.
         % Actually in the mean-time this will be operator controlled, since one
@@ -52,65 +64,57 @@ end
         beep;
         
         % Construct filenames & create directories. 
-        paths = constructPaths(settings);
-        for i=1:length(paths.directories)
-            mkdir(paths.directories(i);
-        end
+        paths = constructPaths(settings, dirs, iteration);
+        createDirectories(paths.directories);
         
-        % Every 2s check for the existence of the trial data.            
-        pauseUntilWritable(paths.marker_file, 2);
-        pauseUntilWritable(paths.grf_file, 2);    
+        % Every 2s check for writability of the trial data.            
+        pauseUntilWritable(paths.files.markers, 2);
+        pauseUntilWritable(paths.files.grfs, 2);    
         
-        % Processing - I feel like this should probably be it's own function! Also I really would like to remove the implicit writing to file within as much of this as possible. Needless writing to file is just going to slow things down at the end of the day, no point in it if I'm just reading things back in as Data objects in the end anyway.
-        int_grf = produceMOT(grf_file, settings.base_dir);
+        % Processing.
+        int_grf = produceMOT(paths.files.grfs, settings.base_dir);
         [markers, grfs] = ...
-            synchronise(marker_file, int_grf, settings.time_delay);
+            synchronise(paths.files.markers, int_grf, settings.time_delay);
         markers.rotate(settings.marker_rotations{:});
         grfs.rotate(settings.grf_rotations{:});
-        
-        % File creation
-        markers.writeToFile(processed_markers);
-        grfs.writeToFile(processed_grfs);
-        
-        %% Segmentation
-        
-        % Segment.
-        %segment('left', 'stance', 40, processed_grfs, processed_markers, int_seg_dir);
-        segment('right', 'stance', 40, processed_grfs, processed_markers, int_seg_dir);
-        % Only doing this for right foot for now, for quicker testing.
-        
-        %% OpenSim compuations
+        markers.writeToFile(paths.files.processed_markers);
+        grfs.writeToFile(paths.files.processed_grfs);
+        segment('right', 'stance', 40, paths.files.processed_grfs, ...
+            paths.files.processed_markers, paths.directories.segmented_inner);
+        % Only doing segmentation for right foot for now, for quicker testing.
         
         % Run appropriate OpenSim analyses.
-        n_cycles = length(marker_files);
-        hip_rom = zeros(1, n_cycles);
+        [n_cycles, gait_cycle_markers] = ...
+            getFilePaths(paths.directories.segmented_inner, '.trc');
+        [~, gait_cycle_grfs] = ...
+            getFilePaths(paths.directories.segmented_inner, '.mot');
+        
+        metric_data = zeros(1, n_cycles);
         for i=1:n_cycles
             
             % Directory for results storage.
-            results = [osim_save_dir filesep 'cycle' sprintf('%03i', i)];
+            results = [paths.directories.opensim_inner ...
+                filesep 'cycle' sprintf('%03i', i)];
             
             % Create OpenSimTrial
-            ost = OpenSimTrial(...
-                settings.model_file, ...
-                [int_seg_dir filesep marker_files(i).name], ...
-                results, [int_seg_dir filesep grf_files(i).name]);
+            ost = OpenSimTrial(settings.model_file, gait_cycle_markers{i}, ...
+                results, gait_cycle_grfs{i});
             
-            % Run IK.
-            ost.run('IK');
-            % ost{i}.run('BK');
-            % ost{i}.run('ID');
-            % Only doing IK for now for ease of testing.
+            % Run analyses.
+            for j=1:length(settings.analyses)
+                ost.run(analyses{j});
+            end
             
             % Compute metric.
             ost_results = OpenSimResults(ost, {'IK'});
-            hip_rom(i) = metric(ost_results, settings.args{:});
+            metric_data(i) = metric(ost_results, settings.args{:});
         end
         
         % If required, calculate the relative baseline for this trial.
         % Not for now.
         
         % Compute & report metric data.
-        result = sum((hip_rom - settings.baseline).^2)/n_cycles;
+        result = sum((metric_data - settings.baseline).^2)/n_cycles;
         
     end
 
