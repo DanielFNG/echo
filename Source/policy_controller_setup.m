@@ -18,6 +18,11 @@ settings.model_file = ...
     'C:\Users\danie\Documents\GitHub\echo\Source\chris_scaled.osim';
 settings.baseline = 49.7;  % Real for fixed, 'measured' for measured
 
+% Gait segmentation settings.
+settings.feet = {'right'};
+settings.segmentation_mode = 'stance';
+settings.segmentation_cutoff = 40;
+
 % Experiment settings. Currently set to standard for UoE setup.
 settings.time_delay = 16*(1/600);  
 settings.marker_rotations = {0,270,0};  

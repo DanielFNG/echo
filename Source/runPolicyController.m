@@ -55,11 +55,7 @@ end
     %   4) Runs the necessary OpenSim analyses on the data
     %   5) Computes & averages the metric data for each collected gait cycle.
         
-        % Communicate with APO to apply correct torque pattern.
-        % Actually in the mean-time this will be operator controlled, since one
-        % will be needed for putting Vicon live anyway. A beep will tell the
-        % operator to update the control parameters on the APO side during the
-        % non-assisted phase of the current trial.
+        % Apply APO torque pattern - currently operator controlled.
         fprintf('Apply rise %i, peak %i, fall %i.\n', X.rise, X.peak, X.fall);
         beep;
         
@@ -72,16 +68,11 @@ end
         pauseUntilWritable(paths.files.grfs, 2);    
         
         % Processing.
-        int_grf = produceMOT(paths.files.grfs, settings.base_dir);
-        [markers, grfs] = ...
-            synchronise(paths.files.markers, int_grf, settings.time_delay);
-        markers.rotate(settings.marker_rotations{:});
-        grfs.rotate(settings.grf_rotations{:});
-        markers.writeToFile(paths.files.processed_markers);
-        grfs.writeToFile(paths.files.processed_grfs);
-        segment('right', 'stance', 40, paths.files.processed_grfs, ...
-            paths.files.processed_markers, paths.directories.segmented_inner);
-        % Only doing segmentation for right foot for now, for quicker testing.
+        processGaitData(paths.files.markers, paths.files.grfs, ...
+            settings.marker_rotations{:}, settings.grf_rotations{:}, ...
+            settings.time_delay, settings.segmentation_mode, ...
+            settings.segmentation_cutoff, settings.feet, ...
+            paths.directories.segmented);
         
         % Run appropriate OpenSim analyses.
         [n_cycles, gait_cycle_markers] = ...
@@ -106,7 +97,7 @@ end
             end
             
             % Compute metric.
-            ost_results = OpenSimResults(ost, {'IK'});
+            ost_results = OpenSimResults(ost, settings.analyses);
             metric_data(i) = metric(ost_results, settings.args{:});
         end
         
