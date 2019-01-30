@@ -6,7 +6,7 @@ function runPolicyController(settings)
 
 % Create top-level filestructure.
 dirs.processed = [settings.base_dir filesep 'processed'];
-dirs.segemented = [settings.base_dir filesep 'gait_cycles'];
+dirs.segmented = [settings.base_dir filesep 'gait_cycles'];
 dirs.opensim = [settings.base_dir filesep 'opensim'];
 createDirectories(dirs);
 
@@ -24,10 +24,10 @@ results = bayesopt(@generalObjectiveFunction, ...
     'AcquisitionFunctionName', settings.acquisition_function, ...
     'MaxObjectiveEvaluations', 1, ...
     'PlotFcn', []);
-save(save_file, 'results', 'iteration');
+save(settings.save_file, 'results', 'iteration');
 
 % Run Bayesian optimisation for remaining steps. 
-while iteration <= max_iterations - 1
+while iteration <= settings.max_iterations - 1
     iteration = iteration + 1;
     old_results = results;
     try
@@ -64,15 +64,15 @@ end
         createDirectories(paths.directories);
         
         % Every 2s check for writability of the trial data.            
-        pauseUntilWritable(paths.files.markers, 2);
-        pauseUntilWritable(paths.files.grfs, 2);    
+        waitUntilWritable(paths.files.markers, 2);
+        waitUntilWritable(paths.files.grfs, 2);    
         
         % Processing.
         processGaitData(paths.files.markers, paths.files.grfs, ...
-            settings.marker_rotations{:}, settings.grf_rotations{:}, ...
+            settings.marker_rotations, settings.grf_rotations, ...
             settings.time_delay, settings.segmentation_mode, ...
             settings.segmentation_cutoff, settings.feet, ...
-            paths.directories.segmented);
+            paths.directories.segmented_inner);
         
         % Run appropriate OpenSim analyses.
         [n_cycles, gait_cycle_markers] = ...
@@ -93,12 +93,12 @@ end
             
             % Run analyses.
             for j=1:length(settings.analyses)
-                ost.run(analyses{j});
+                ost.run(settings.analyses{j});
             end
             
             % Compute metric.
             ost_results = OpenSimResults(ost, settings.analyses);
-            metric_data(i) = metric(ost_results, settings.args{:});
+            metric_data(i) = settings.metric(ost_results, settings.args{:});
         end
         
         % If required, calculate the relative baseline for this trial.
