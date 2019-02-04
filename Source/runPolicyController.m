@@ -67,12 +67,30 @@ end
         waitUntilWritable(paths.files.markers, 2);
         waitUntilWritable(paths.files.grfs, 2);    
         
-        % Processing.
-        processGaitData(paths.files.markers, paths.files.grfs, ...
-            settings.marker_rotations, settings.grf_rotations, ...
-            settings.time_delay, settings.segmentation_mode, ...
-            settings.segmentation_cutoff, settings.feet, ...
-            paths.directories.segmented_inner);
+        % Processing. Use a try/catch loop to automatically deal with missing 
+        % markers in the Vicon data - sometimes this slips through. 
+        try
+            processGaitData(paths.files.markers, paths.files.grfs, ...
+                settings.marker_rotations, settings.grf_rotations, ...
+                settings.time_delay, settings.segmentation_mode, ...
+                settings.segmentation_cutoff, settings.feet, ...
+                paths.directories.segmented_inner);
+        catch err
+            if strcmp(err.identifier, 'Data:Gaps')
+                
+                % Remove problematic frames from data.
+                removeMissingFrames(paths.files.markers, paths.files.grfs);
+                
+                % Retry processing the gait data. 
+                processGaitData(paths.files.markers, paths.files.grfs, ...
+                    settings.marker_rotations, settings.grf_rotations, ...
+                    settings.time_delay, settings.segmentation_mode, ...
+                    settings.segmentation_cutoff, settings.feet, ...
+                    paths.directories.segmented_inner);
+            else
+                error('No current fix for detected error.');
+            end
+        end     
         
         % Run appropriate OpenSim analyses.
         [n_cycles, gait_cycle_markers] = ...
@@ -92,9 +110,7 @@ end
                 results, gait_cycle_grfs{i});
             
             % Run analyses.
-            for j=1:length(settings.analyses)
-                ost.run(settings.analyses{j});
-            end
+            ost.run(settings.analyses);
             
             % Compute metric.
             ost_results = OpenSimResults(ost, settings.analyses);
