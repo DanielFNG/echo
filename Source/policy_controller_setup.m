@@ -36,7 +36,7 @@ settings.v_format = '%02i';  % # of leading 0's in Vicon (trc) filenames
 settings.d_format = '%04i';  % # of leading 0's in D-Flow (txt) filenames
 
 % Bayesian optimisation settings. 
-settings.max_iterations = 3;
+settings.max_iterations = 2;
 settings.acquisition_function = 'probability-of-improvement';
 settings.parameter_constraints = @parameterConstraints;
 
