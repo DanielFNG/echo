@@ -121,7 +121,7 @@ end
         % Not for now.
         
         % Compute & report metric data.
-        result = sum((metric_data - settings.baseline).^2)/n_cycles;
+        result = sum(abs(metric_data - settings.baseline))/n_cycles;
         
     end
 
