@@ -3,19 +3,19 @@
 % script to run the policy controller. 
 
 % Save file name.
-settings.save_file = 'policy_controller_results.mat';
+settings.save_file = 'span-results-right-hip-rom.mat';
 
 % Control parameterisation settings. 
-settings.rise_range = [30, 50];
-settings.peak_range = [35, 70];
-settings.fall_range = [40, 90];
+settings.rise_range = [9, 11];
+settings.peak_range = [10, 12];
+settings.fall_range = [13, 15];
 
 % Subject specific settings.
 settings.metric = @calculateROM;
 settings.args = {'hip_flexion_r'};
 settings.analyses = {'IK'};
-settings.model_file = ...
-    'C:\Users\danie\Documents\GitHub\echo\Source\chris_scaled.osim';
+settings.model_file = ['D:\Dropbox\PhD\HIL Control\HIL Span\'...
+    'Organised for testing HIL\Models\no_APO.osim'];
 settings.baseline = 49.7;  % Real for fixed, 'measured' for measured
 
 % Gait segmentation settings.
