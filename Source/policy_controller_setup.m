@@ -14,7 +14,7 @@ settings.fall_range = [13, 15];
 settings.metric = @calculateROM;
 settings.args = {'hip_flexion_r'};
 settings.analyses = {'IK'};
-settings.model_file = ['D:\Dropbox\PhD\HIL Control\HIL Span\'...
+settings.model_file = ['F:\Dropbox\PhD\HIL Control\HIL Span\'...
     'Organised for testing HIL\Models\no_APO.osim'];
 settings.baseline = 34.2397;  % With APO.
 %settings.baseline = 29.4703;  % No APO.
