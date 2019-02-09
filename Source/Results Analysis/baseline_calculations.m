@@ -1,8 +1,8 @@
 % Get the no-APO baseline.
-human_model = 'D:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Models\no_APO.osim';
-human_markers = 'D:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Baseline\No APO\Processed\Markers';
-human_results = 'D:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Baseline\No APO\OpenSim';
-human_grfs = 'D:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Baseline\No APO\Processed\GRF';
+human_model = 'F:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Models\no_APO.osim';
+human_markers = 'F:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Baseline\No APO\Processed\Markers\right';
+human_results = 'F:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Baseline\No APO\OpenSim';
+human_grfs = 'F:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Baseline\No APO\Processed\GRF\right';
 
 human_osts = runBatch({'IK'}, human_model, human_markers, human_results, human_grfs);
 
@@ -15,10 +15,10 @@ end
 mean_no_APO_hip_rom = mean(human_hip_rom);
 
 % Get the APO baseline.
-APO_model = 'D:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Models\APO.osim';
-APO_markers = 'D:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Baseline\APO\Processed_Right\Markers';
-APO_results = 'D:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Baseline\APO\OpenSim';
-APO_grfs = 'D:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Baseline\APO\Processed_Right\GRF';
+APO_model = 'F:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Models\APO.osim';
+APO_markers = 'F:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Baseline\APO\Processed\Markers\right';
+APO_results = 'F:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Baseline\APO\OpenSim';
+APO_grfs = 'F:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Baseline\APO\Processed\GRF\right';
 
 APO_osts = runBatch({'IK'}, APO_model, APO_markers, APO_results, APO_grfs);
 

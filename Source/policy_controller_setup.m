@@ -16,7 +16,8 @@ settings.args = {'hip_flexion_r'};
 settings.analyses = {'IK'};
 settings.model_file = ['D:\Dropbox\PhD\HIL Control\HIL Span\'...
     'Organised for testing HIL\Models\no_APO.osim'];
-settings.baseline = 49.7;  % Real for fixed, 'measured' for measured
+settings.baseline = 34.2397;  % With APO.
+%settings.baseline = 29.4703;  % No APO.
 
 % Gait segmentation settings.
 settings.feet = {'right'};
@@ -29,14 +30,14 @@ settings.marker_rotations = {0,270,0};
 settings.grf_rotations = {0,90,0};
 
 % Filestructure.
-settings.base_dir = 'F:\Dropbox\PhD\HIL Control\Automation-test\walking';
+settings.base_dir = 'F:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Data';
 settings.v_name = 'markers';
 settings.d_name = 'NE';
 settings.v_format = '%02i';  % # of leading 0's in Vicon (trc) filenames 
 settings.d_format = '%04i';  % # of leading 0's in D-Flow (txt) filenames
 
 % Bayesian optimisation settings. 
-settings.max_iterations = 2;
+settings.max_iterations = 24;
 settings.acquisition_function = 'probability-of-improvement';
 settings.parameter_constraints = @parameterConstraints;
 

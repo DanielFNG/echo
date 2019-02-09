@@ -64,13 +64,17 @@ end
         createDirectories(paths.directories);
         
         % Every 2s check for writability of the trial data.            
-        waitUntilWritable(paths.files.markers, 2);
-        waitUntilWritable(paths.files.grfs, 2);    
+        %waitUntilWritable(paths.files.markers, 2);
+        %waitUntilWritable(paths.files.grfs, 2);   
+        
+        % Span marker paths.
+        marker_file = [settings.base_dir filesep num2str(X.rise*5) '_' num2str(X.peak*5) '_' num2str(X.fall*5) '.trc'];
+        grf_file = [settings.base_dir filesep num2str(X.rise*5) '_' num2str(X.peak*5) '_' num2str(X.fall*5) '.txt'];
         
         % Processing. Use a try/catch loop to automatically deal with missing 
         % markers in the Vicon data - sometimes this slips through. 
         try
-            processMotionData(paths.files.markers, paths.files.grfs, ...
+            processMotionData(marker_file, grf_file, ...
                 settings.marker_rotations, settings.grf_rotations, ...
                 settings.time_delay, paths.directories.segmented_inner, ...
                 settings.feet, settings.segmentation_mode, ...
@@ -79,10 +83,10 @@ end
             if strcmp(err.identifier, 'Data:Gaps')
                 
                 % Remove problematic frames from data.
-                removeMissingFrames(paths.files.markers, paths.files.grfs);
+                removeMissingFrames(marker_file, grf_file);
                 
                 % Retry processing the gait data. 
-                processMotionData(paths.files.markers, paths.files.grfs, ...
+                processMotionData(marker_file, grf_file, ...
                 settings.marker_rotations, settings.grf_rotations, ...
                 settings.time_delay, paths.directories.segmented_inner, ...
                 settings.feet, settings.segmentation_mode, ...
