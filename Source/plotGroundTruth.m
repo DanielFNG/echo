@@ -11,13 +11,15 @@ function plotGroundTruth(matrix, name, baseline)
     nums = [65, 70, 75];
     
     figure;
-    sgtitle(upper(name), 'FontSize', 20, 'Color', 'r');
+    %sgtitle(upper(name), 'FontSize', 20, 'Color', 'r');
     hold on;
     for i=1:6
         subplot(3, 3, i);
         if i < 4
             h = imagesc(flip(matrix(:, :, i)'), clims);
+            hold on;
             title(['Fall = ' num2str(nums(i)) '%'], 'FontSize', 15);
+            plot(3,3,'rx', 'MarkerSize', 30, 'LineWidth', 2.0);
             yticks([1,2,3]);
             yticklabels([60, 55, 50]);
             ax = ancestor(h, 'axes');
@@ -48,6 +50,10 @@ function plotGroundTruth(matrix, name, baseline)
             end
             newmat(isnan(newmat)) = 100;
             h = imagesc(flip(newmat'), clims);
+            if i == 6
+                hold on;
+                plot(3,3,'rx', 'MarkerSize', 30, 'LineWidth', 2.0);
+            end
             title(['Avg by ' titles{i-3}], 'FontSize', 15);
             if i == 4
                 yticks([1,2,3]);
