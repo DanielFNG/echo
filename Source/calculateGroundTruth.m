@@ -1,8 +1,6 @@
-function result = calculateGroundTruth(metric, varargin)
+function result = calculateGroundTruth(metric, baseline, varargin)
 
     root = 'F:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Matlab Save Files';
-    
-    baseline = 34.2397;
     
     rise_vals = [45, 50, 55];
     peak_vals = [50, 55, 60];
