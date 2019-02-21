@@ -1,6 +1,6 @@
 function result = calculateBaseline(type, metric, varargin)
 
-    root = 'F:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Results';
+    root = 'D:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Results';
     
     switch type
         case 'APO'
@@ -15,7 +15,8 @@ function result = calculateBaseline(type, metric, varargin)
         n_samples = length(baseline.osts{i});
         sample_data = zeros(1, n_samples);
         for j=1:n_samples
-            sample_data(j) = metric(baseline.osts{i}{j}, varargin{:});
+            gait_cycle = GaitCycle(baseline.osts{i}{j});
+            sample_data(j) = metric(gait_cycle, varargin{:});
         end
         metric_data(i) = mean(sample_data);
     end

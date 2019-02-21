@@ -1,6 +1,6 @@
 function result = calculateGroundTruth(metric, baseline, varargin)
 
-    root = 'F:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Matlab Save Files';
+    root = 'D:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Matlab Save Files';
     
     rise_vals = [45, 50, 55];
     peak_vals = [50, 55, 60];
@@ -24,7 +24,8 @@ function result = calculateGroundTruth(metric, baseline, varargin)
                     n_samples = length(ost);
                     metric_data = zeros(1, n_samples);
                     for i=1:n_samples
-                        metric_data(i) = metric(ost{i}, varargin{:});
+                        gait_cycle = GaitCycle(ost{i});
+                        metric_data(i) = metric(gait_cycle, varargin{:});
                     end
                     result(rise, peak, fall) = sum(abs(metric_data - baseline))/n_samples;
                 else

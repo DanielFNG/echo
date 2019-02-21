@@ -7,9 +7,12 @@ n_folders = length(folders);
 osts = cell(1, n_folders);
 for i=1:n_folders
     [~, name, ~] = fileparts(folders{i});
-    grfs = [folders{i} filesep 'right' filesep 'GRF'];
-    markers = [folders{i} filesep 'right' filesep 'Markers'];
+    [n_grfs, grfs] = getFilePaths([folders{i} filesep 'GRF' filesep 'right'], '.mot');
+    [~, markers] = getFilePaths([folders{i} filesep 'Markers' filesep 'right'], 'trc');
     results = [osim filesep name filesep 'right'];
-    osts{i} = runBatch({'IK', 'ID', 'BK'}, model, markers, results, grfs);
+    for j=1:length(grfs)
+        osts{i}{j} = OpenSimTrial(model, markers{j}, [results filesep num2str(j)], grfs{j});
+        osts{i}{j}.assertComputed({'IK', 'ID', 'BK'});
+    end
 end
     

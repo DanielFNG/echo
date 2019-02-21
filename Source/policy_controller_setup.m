@@ -3,7 +3,7 @@
 % script to run the policy controller. 
 
 % Save file name.
-settings.save_file = 'span-results-right-hip-rom.mat';
+settings.save_file = 'span-results-right-hip-rom4-EIP0.8.mat';
 
 % Control parameterisation settings. 
 settings.rise_range = [9, 11];
@@ -38,7 +38,7 @@ settings.d_format = '%04i';  % # of leading 0's in D-Flow (txt) filenames
 
 % Bayesian optimisation settings. 
 settings.max_iterations = 24;
-settings.acquisition_function = 'probability-of-improvement';
+settings.acquisition_function = 'expected-improvement-plus';
 settings.parameter_constraints = @parameterConstraints;
 
 % Run policy controller. 
