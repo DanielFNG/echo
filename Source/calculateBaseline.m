@@ -1,4 +1,4 @@
-function result = calculateBaseline(type, metric, varargin)
+function result = calculateBaseline(type, metric, speed, varargin)
 
     root = 'D:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Results';
     
@@ -15,7 +15,8 @@ function result = calculateBaseline(type, metric, varargin)
         n_samples = length(baseline.osts{i});
         sample_data = zeros(1, n_samples);
         for j=1:n_samples
-            gait_cycle = GaitCycle(baseline.osts{i}{j});
+            motion_data = MotionData(baseline.osts{i}{j}, {'Markers', 'GRF', 'BK', 'IK'}, speed, 'x');
+            gait_cycle = GaitCycle(motion_data);
             sample_data(j) = metric(gait_cycle, varargin{:});
         end
         metric_data(i) = mean(sample_data);
