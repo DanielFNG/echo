@@ -11,6 +11,7 @@ function result = calculateBaseline(type, metric, varargin)
     
     n_osts = length(baseline.gait);
     metric_data = zeros(1, n_osts);
+    sdevs = metric_data;
     for i=1:n_osts
         n_samples = length(baseline.gait{i});
         sample_data = zeros(1, n_samples);
@@ -19,6 +20,7 @@ function result = calculateBaseline(type, metric, varargin)
             sample_data(j) = metric(gait_cycle, varargin{:});
         end
         metric_data(i) = mean(sample_data);
+        sdevs(i) = std(sample_data);
     end
     result = mean(metric_data);
     

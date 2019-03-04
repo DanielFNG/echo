@@ -1,7 +1,7 @@
 % Choose the metric, arguments, baseline mode & a name.
 mode = 'APO';
 metric = @calculateXPMoS;
-args = {0.92, 'x', 'min'};
+args = {'x', 'min'};
 name = 'XPMoS';
 
 % Calculate baseline.
