@@ -1,3 +1,4 @@
+root = 'D:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Results\Span of BayesOpts using r_hip';
 methods = {'Probability of Improvement', 'Expected Improvement', 'Expected Improvement Plus (Exploration = 0.3)', 'Expected Improvement Plus (Exploration = 0.8)'};
 strings = {'', '-EI', '-EIP0.3', '-EIP0.8'};
 known_minimum = ones(1, 24)*1.7207;

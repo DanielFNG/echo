@@ -1,5 +1,6 @@
-function plotGroundTruth(matrix, name, baseline)
-
+function plotGroundTruth(matrix, baseline)
+% An ugly function for plotting ground truth results, should probably clean
+% this up eventually. 
     
     matrix(matrix == 100) = baseline;
     matrix = matrix/baseline*100;
@@ -11,7 +12,6 @@ function plotGroundTruth(matrix, name, baseline)
     nums = [65, 70, 75];
     
     figure;
-    %sgtitle(upper(name), 'FontSize', 20, 'Color', 'r');
     hold on;
     for i=1:6
         subplot(3, 3, i);
