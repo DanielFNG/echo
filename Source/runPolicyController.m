@@ -6,11 +6,15 @@ function runPolicyController(settings)
 
 if strcmp(settings.operation_mode, 'online')
     % Create top-level filestructure.
-    dirs.processed = [settings.base_dir filesep 'processed'];
-    dirs.segmented = [settings.base_dir filesep 'gait_cycles'];
-    dirs.opensim = [settings.base_dir filesep 'opensim'];
-    createDirectories(dirs);
+    settings.dirs.segmented = [settings.base_dir filesep 'gait_cycles'];
+    settings.dirs.opensim = [settings.base_dir filesep 'opensim'];
+    createDirectories(settings.dirs);
 end
+
+% Create required function handles.
+parameter_constraints = ...
+    @(X) (parameterConstraints(X, settings.multiplier, settings.min_length));
+objective_function = @(X) (generalObjectiveFunction(X, settings));
 
 % Construct optimisation variables. 
 rise = optimizableVariable('rise', settings.rise_range, 'Type', 'integer');
@@ -19,19 +23,20 @@ fall = optimizableVariable('fall', settings.fall_range, 'Type', 'integer');
 optimisation_variables = [rise, peak, fall];
 
 % Initialise Bayesian optimisation with a single step, & save result.
-iteration = 1;
-results = bayesopt(settings.objective_function, ...
+global G__iteration;
+G__iteration = 1;
+results = bayesopt(objective_function, ...
     optimisation_variables, ...
-    'XConstraintFcn', settings.parameter_constraints, ... 
+    'XConstraintFcn', parameter_constraints, ... 
     'AcquisitionFunctionName', settings.acquisition_function, ...
     'MaxObjectiveEvaluations', 1, ...
     'PlotFcn', [], ...
     settings.bayesopt_args{:});
-save(settings.save_file, 'results', 'iteration');
+save(settings.save_file, 'results', 'G__iteration');
 
 % Run Bayesian optimisation for remaining steps. 
-while iteration <= settings.max_iterations - 1
-    iteration = iteration + 1;
+while G__iteration <= settings.max_iterations - 1
+    G__iteration = G__iteration + 1;
     old_results = results;
     try
         results = old_results.resume('MaxObjectiveEvaluations', 1);
@@ -39,9 +44,9 @@ while iteration <= settings.max_iterations - 1
         disp(err.message);
         input('Press enter when ready to retry.\n');
         results = old_results;
-        iteration = iteration - 1;
+        G__iteration = G__iteration - 1;
     end
-    save(settings.save_file, 'results', 'iteration');
+    save(settings.save_file, 'results', 'G__iteration');
 end
 
 end

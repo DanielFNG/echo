@@ -3,13 +3,13 @@
 % script to run the policy controller. 
 
 % Save file name - where the bayesopt results will be saved.
-settings.save_file = 'span-results-right-hip-rom4-EIP0.8.mat';
+settings.save_file = 'test-online.mat';
 
 % Operation mode - online or offline.
 settings.operation_mode = 'online';
 
 % Subject specific settings.
-settings.model_file = ['F:\Dropbox\PhD\HIL Control\HIL Span\'...
+settings.model_file = ['D:\Dropbox\PhD\HIL Control\HIL Span\'...
     'Organised for testing HIL\Models\no_APO.osim'];
 settings.leg_length = 0.92;
 settings.toe_length = 0.1;
@@ -27,26 +27,27 @@ settings.marker_rotations = {0,270,0};
 settings.grf_rotations = {0,90,0};
 
 % Valid ranges for the control parameters. 
-settings.rise_range = [45, 55];
-settings.peak_range = [50, 60];
-settings.fall_range = [65, 75];
+settings.rise_range = [9, 11];
+settings.peak_range = [10, 12];
+settings.fall_range = [13, 15];
 
 % Control parameter variables.
-min_length = 10;
+settings.multiplier = 5;
+settings.min_length = 10;
 
 % Baseline mode - absolute or relative.
 settings.baseline_mode = 'absolute';
-settings.baseline = 34.2397;  % HipRoM with APO.
-%settings.baseline = 29.4703;  % HipRoM without APO.
+settings.baseline = 35.2809;  % HipRoM with APO.
+%settings.baseline = 29.3065;  % HipRoM without APO.
 
 % Metric specific settings.
-settings.metric = @calculateXPMoS;
-settings.args = {'x', 'min'};
-settings.opensim_analyses = {'IK', 'BK'};
-settings.motion_analyses = {'Markers', 'GRF', 'IK' 'BK'};
+settings.metric = @calculateROM;
+settings.args = {'hip_flexion_r'};
+settings.opensim_analyses = {'IK'};
+settings.motion_analyses = {'IK'};
 
 % Filestructure.
-settings.base_dir = 'F:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Data';
+settings.base_dir = 'D:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\test_online';
 settings.v_name = 'markers';
 settings.d_name = 'NE';
 settings.v_format = '%02i';  % # of leading 0's in Vicon (trc) filenames 
@@ -59,12 +60,8 @@ settings.acquisition_function = 'expected-improvement-plus';
 % Additional arguments to the bayesopt function. 
 settings.bayesopt_args = {'ExplorationRatio', 0.8};
 
-%% Run
 
-% Create required function handles. 
-settings.parameter_constraints = ...
-    @(X) (parameterConstraints(X, 1, min_length));
-settings.objective_function = @(X) (generalObjectiveFunction(X, settings));
+%% Run
 
 % Run policy controller. 
 runPolicyController(settings);

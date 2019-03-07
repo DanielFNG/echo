@@ -21,7 +21,7 @@ settings.fall_range = [13, 15];
 
 % Control parameter variables.
 settings.multiplier = 5;
-min_length = 10;
+settings.min_length = 10;
 
 % Baseline mode - absolute or relative.
 settings.baseline_mode = 'absolute';
@@ -41,12 +41,6 @@ settings.acquisition_function = 'expected-improvement-plus';
 % Additional arguments to the bayesopt function. 
 settings.bayesopt_args = {'ExplorationRatio', 0.8};
 
-%% Run
+%% Run policy controller
 
-% Create required function handles. 
-settings.parameter_constraints = ...
-    @(X) (parameterConstraints(X, settings.multiplier, min_length));
-settings.objective_function = @(X) (generalObjectiveFunction(X, settings));
-
-% Run policy controller. 
 runPolicyController(settings);
