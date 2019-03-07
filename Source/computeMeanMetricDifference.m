@@ -1,8 +1,9 @@
 function result = computeMeanMetricDifference(input, comp, metric, varargin)
-% Computes the mean value of a metric given input GaitCycles.
+% Computes the mean difference over GaitCycles between a metric & a given value.
 %
 % Input:
 %        input - cell array of gait cycles, can be nested
+%        comp - baseline, or value for comparison
 %        metric - reference to metric function to be used
 %        varargin - additional arguments to metric function
 % Output:
