@@ -1,4 +1,6 @@
 function combinations = suggestRandomisedParameters(rise, peak, fall)
+% Creates a combination vector and suggests random combinations until all
+% have been explored.
 
     combinations = combvec(rise, peak, fall);
     n_combinations = size(combinations, 2);
