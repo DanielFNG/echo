@@ -12,10 +12,21 @@ function result = generalObjectiveFunction(X, settings)
             [settings.d_name sprintf(settings.d_format, G__iteration)];
         
         % Raw marker & grf files.
-        paths.files.markers = ...
-            [settings.base_dir filesep paths.strings.markers '.trc'];
-        paths.files.grfs = ...
-            [settings.base_dir filesep paths.strings.grfs '.txt'];
+        paths.files.markers = [];
+        paths.files.grfs = [];
+        switch settings.data_inputs
+            case 'Motion'
+                paths.files.markers = [settings.base_dir filesep ...
+                    paths.strings.markers '.trc'];
+                paths.files.grfs = [settings.base_dir filesep ...
+                    paths.strings.grfs '.txt'];
+            case 'Markers'
+                paths.files.markers = [settings.base_dir filesep ...
+                    paths.strings.markers '.trc'];
+            case 'GRF'
+                paths.files.grfs = [settings.base_dir filesep ...
+                    paths.strings.grfs '.txt'];
+        end
         
         % Inner-level directories for saving segmentation & OpenSim results.
         paths.directories.segmented_inner = [settings.dirs.segmented ...
@@ -36,7 +47,7 @@ function result = generalObjectiveFunction(X, settings)
             % Apply APO torque pattern.
             fprintf('\nApply rise %i, peak %i, fall %i.\n', rise, peak, fall);
             beep;
-            input('Press any key to continue.');
+            %input('Press any key to continue.');
 
             % Construct filenames & create directories.
             paths = constructPaths(settings, G__iteration);

@@ -21,11 +21,25 @@ if strcmp(settings.baseline_mode, 'absolute')
     fprintf('\nPlease collect baseline data.\n');
     
     % Construct paths to marker & grf files of baseline data.
-    markers = [settings.base_dir filesep settings.baseline_filename '.trc'];
-    grfs = [settings.base_dir filesep settings.baseline_filename '.txt'];
+    grfs = [];
+    markers = [];
+    switch settings.data_inputs
+        case 'Motion'
+            markers = [settings.base_dir filesep ...
+                settings.baseline_filename '.trc'];
+            grfs = [settings.base_dir filesep ...
+                settings.baseline_filename '.txt'];
+        case 'Markers'
+            markers = [settings.base_dir filesep ...
+                settings.baseline_filename '.trc'];
+        case 'GRF'
+            grfs = [settings.base_dir filesep ...
+                settings.baseline_filename '.txt'];
+    end
     
     % Obtain gait cycles from raw data processing.
-    cycles = processRawData(markers, grfs, settings.dirs.baseline, settings);
+    cycles = ...
+        processRawData(markers, grfs, settings.dirs.baseline, settings);
     
     % Compute the mean value of the metric from the baseline data, & use
     % this as the baseline going forward.
@@ -39,8 +53,8 @@ if strcmp(settings.baseline_mode, 'absolute')
 end
 
 % Create required function handles.
-parameter_constraints = ...
-    @(X) (parameterConstraints(X, settings.multiplier, settings.min_length));
+parameter_constraints = @(X) ...
+    (parameterConstraints(X, settings.multiplier, settings.min_length));
 objective_function = @(X) (generalObjectiveFunction(X, settings));
 
 % Construct optimisation variables. 
