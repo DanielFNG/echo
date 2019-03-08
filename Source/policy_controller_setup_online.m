@@ -37,7 +37,8 @@ settings.min_length = 10;
 
 % Baseline mode - absolute or relative.
 settings.baseline_mode = 'absolute';
-settings.baseline = 35.2809;  % HipRoM with APO.
+settings.baseline_filename = 'test';
+%settings.baseline = 35.2809;  % HipRoM with APO.
 %settings.baseline = 29.3065;  % HipRoM without APO.
 
 % Metric specific settings.

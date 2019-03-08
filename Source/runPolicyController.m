@@ -6,9 +6,36 @@ function runPolicyController(settings)
 
 if strcmp(settings.operation_mode, 'online')
     % Create top-level filestructure.
+    settings.dirs.baseline = [settings.base_dir filesep 'baseline'];
     settings.dirs.segmented = [settings.base_dir filesep 'gait_cycles'];
     settings.dirs.opensim = [settings.base_dir filesep 'opensim'];
     createDirectories(settings.dirs);
+end
+
+if strcmp(settings.baseline_mode, 'absolute')
+    
+    % Some handy output.
+    fprintf('\nBeginning baseline computation step.\n');
+    input(['Press return confirm you have changed filenames in '...
+        'D-Flow and Nexus.'], 's');
+    fprintf('\nPlease collect baseline data.\n');
+    
+    % Construct paths to marker & grf files of baseline data.
+    markers = [settings.base_dir filesep settings.baseline_filename '.trc'];
+    grfs = [settings.base_dir filesep settings.baseline_filename '.txt'];
+    
+    % Obtain gait cycles from raw data processing.
+    cycles = processRawData(markers, grfs, settings.dirs.baseline, settings);
+    
+    % Compute the mean value of the metric from the baseline data, & use
+    % this as the baseline going forward.
+    settings.baseline = computeMeanMetric(...
+        cycles, settings.metric, settings.args{:});
+    
+    % More handy output.
+    input(['\nBaseline computation complete.\nPress return once you have' ...
+        ' finished changing filenames in Nexus and D-Flow in preparation ' ...
+        'for HIL data collection.'], 's');
 end
 
 % Create required function handles.
