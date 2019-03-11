@@ -4,6 +4,7 @@ function processViconData(trial)
 
     vicon = ViconNexus();
     
+    pause(1);
     vicon.OpenTrial(trial, 30);
 
     vicon.RunPipeline('Reconstruct And Label', '', timeout);
@@ -17,7 +18,7 @@ function processViconData(trial)
     vicon.RunPipeline('Make TRC', '', timeout);
     vicon.SaveTrial(timeout);
     
-    moveAndClick(60, 50);
+    moveAndClick(70, 50);
     pause(2);
     moveAndClick(1220, 260);
     moveAndClick(1245, 260);

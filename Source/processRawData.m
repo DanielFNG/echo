@@ -22,8 +22,8 @@ function cycles = processRawData(markers, grfs, save_dir, osim_dir, settings)
     if strcmp(settings.operation_mode, 'online') && ~isempty(markers)
         % Wait until raw vicon data is available.
         [path, name, ~] = fileparts(markers);
-        trial_name = [path name];
-        waitUntilWritable([trial_name filesep '.x2d'], 2);
+        trial_name = [path filesep name];
+        waitUntilWritable([trial_name '.x2d'], 2);
         processViconData(trial_name);
     end
 

@@ -9,7 +9,7 @@ settings.save_file = 'test-online.mat';
 settings.operation_mode = 'online';
 
 % Data inputs - markers only, grfs only, or both (motion).
-settings.data_inputs = 'GRF';
+settings.data_inputs = 'Motion';
 
 % Subject specific settings.
 settings.model_file = ['C:\Users\danie\Documents\GitHub\echo\Source\chris_scaled.osim'];
@@ -39,20 +39,20 @@ settings.min_length = 10;
 
 % Baseline mode - absolute or relative.
 settings.baseline_mode = 'absolute';
-settings.baseline_filename = 'test0001';
+settings.baseline_filename = 'baseline0001';
 %settings.baseline = 35.2809;  % HipRoM with APO.
 %settings.baseline = 29.3065;  % HipRoM without APO.
 
 % Metric specific settings.
-settings.metric = @calculateCoPD;
-settings.args = {'x'};
-settings.opensim_analyses = {};
-settings.motion_analyses = {'GRF'};
+settings.metric = @calculateROM;
+settings.args = {'hip_flexion_r'};
+settings.opensim_analyses = {'IK'};
+settings.motion_analyses = {'Markers', 'GRF', 'IK'};
 
 % Filestructure.
 settings.base_dir = 'D:\Share\Shared_Data\HIL\Protocol_Setup\08-03-19';
 settings.v_name = 'markers';
-settings.d_name = 'test';
+settings.d_name = 'grf';
 settings.v_format = '%02i';  % # of leading 0's in Vicon (trc) filenames 
 settings.d_format = '%04i';  % # of leading 0's in D-Flow (txt) filenames
 
