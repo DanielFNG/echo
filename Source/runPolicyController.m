@@ -7,7 +7,7 @@ function runPolicyController(settings)
 if strcmp(settings.operation_mode, 'online')
     % Create top-level filestructure.
     settings.dirs.baseline = [settings.base_dir filesep 'baseline'];
-    settings.dirs.segmented = [settings.base_dir filesep 'gait_cycles'];
+    settings.dirs.segmented = [settings.base_dir filesep 'processed'];
     settings.dirs.opensim = [settings.base_dir filesep 'opensim'];
     createDirectories(settings.dirs);
 end
@@ -38,8 +38,9 @@ if strcmp(settings.baseline_mode, 'absolute')
     end
     
     % Obtain gait cycles from raw data processing.
-    cycles = ...
-        processRawData(markers, grfs, settings.dirs.baseline, settings);
+    osim_dir = [settings.dirs.opensim filesep 'baseline'];
+    cycles = processRawData(...
+        markers, grfs, settings.dirs.baseline, osim_dir, settings);
     
     % Compute the mean value of the metric from the baseline data, & use
     % this as the baseline going forward.

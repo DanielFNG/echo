@@ -1,4 +1,4 @@
-function cycles = processRawData(markers, grfs, save_dir, settings)
+function cycles = processRawData(markers, grfs, save_dir, osim_dir, settings)
 
     function process(markers, grfs, save_dir, settings)
         if isempty(markers)
@@ -61,13 +61,13 @@ function cycles = processRawData(markers, grfs, save_dir, settings)
     switch settings.data_inputs
         case 'Motion'
             trials = runBatch(settings.opensim_analyses, settings.model_file,...
-                markers_folder, save_dir, grf_folder);
+                markers_folder, osim_dir, grf_folder);
         case 'GRF'
             trials = runBatch(settings.opensim_analyses, settings.model_file,...
-                [], save_dir, grf_folder);
+                [], osim_dir, grf_folder);
         case 'Markers'
             trials = runBatch(settings.opensim_analyses, settings.model_file,...
-                markers_folder, save_dir, []);
+                markers_folder, osim_dir, []);
     end
             
     n_samples = length(trials);

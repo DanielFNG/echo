@@ -47,14 +47,15 @@ function result = generalObjectiveFunction(X, settings)
             % Apply APO torque pattern.
             fprintf('\nApply rise %i, peak %i, fall %i.\n', rise, peak, fall);
             beep;
-            %input('Press any key to continue.');
+            input('Press any key to continue.');
 
             % Construct filenames & create directories.
             paths = constructPaths(settings, G__iteration);
 
             % Obtain gait cycles from raw data processing.
             cycles = processRawData(paths.files.markers, paths.files.grfs, ...
-                paths.directories.segmented_inner, settings);
+                paths.directories.segmented_inner, ...
+                paths.directories.opensim_inner, settings);
 
         case 'offline'
 
