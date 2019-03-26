@@ -67,12 +67,18 @@ function result = generalObjectiveFunction(X, settings)
 
     end
     
-    % If required, calculate the relative baseline for this trial - not yet
-    % implemented, so...
-    comparison = settings.baseline;
-    
-    % Compute & report difference from baseline.
-    result = computeMeanMetricDifference(...
-        cycles, comparison, settings.metric, settings.args{:});
+    switch settings.baseline_mode
+        case 'absolute'
+            % Compute & report difference from baseline.
+            result = computeMeanMetricDifference(...
+                cycles, settings.baseline, settings.metric, settings.args{:});
+        case 'relative'
+            % Calculate the relative baseline for this trial, not yet
+            % implemented...
+        case 'none'
+            % Compute & report mean metric value
+            result = ...
+                computeMeanMetric(cycles, settings.metric, settings.args{:});
+    end
 
 end

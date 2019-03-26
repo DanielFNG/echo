@@ -37,17 +37,17 @@ settings.fall_range = [13, 15];
 settings.multiplier = 5;
 settings.min_length = 10;
 
-% Baseline mode - absolute or relative.
-settings.baseline_mode = 'absolute';
+% Baseline mode - none, absolute or relative.
+settings.baseline_mode = 'none';
 settings.baseline_filename = 'baseline0001';
 %settings.baseline = 35.2809;  % HipRoM with APO.
 %settings.baseline = 29.3065;  % HipRoM without APO.
 
 % Metric specific settings.
-settings.metric = @calculateROM;
-settings.args = {'hip_flexion_r'};
-settings.opensim_analyses = {'IK'};
-settings.motion_analyses = {'Markers', 'GRF', 'IK'};
+settings.metric = @calculateXPBoS;
+settings.args = {'x', 'mean'};
+settings.opensim_analyses = {'IK', 'BK'};
+settings.motion_analyses = {'Markers', 'GRF', 'IK', 'BK'};
 
 % Filestructure.
 settings.base_dir = 'D:\Share\Shared_Data\HIL\Protocol_Setup\08-03-19';
