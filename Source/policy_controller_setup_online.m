@@ -28,7 +28,9 @@ settings.time_delay = 16*(1/600);
 settings.marker_rotations = {0,270,0};  
 settings.grf_rotations = {0,90,0};
 
-% Valid ranges for the control parameters. 
+% Valid ranges for the control parameters. NOTE: if
+% multiplier*min_rise_range is less than 10, we will have problems with the
+% TCP-IP solution. 
 settings.rise_range = [9, 11];
 settings.peak_range = [10, 12];
 settings.fall_range = [13, 15];
@@ -42,6 +44,9 @@ settings.baseline_mode = 'none';
 settings.baseline_filename = 'baseline0001';
 %settings.baseline = 35.2809;  % HipRoM with APO.
 %settings.baseline = 29.3065;  % HipRoM without APO.
+
+% Communication - this should be an active TCPIP server. 
+settings.server = t;
 
 % Metric specific settings.
 settings.metric = @calculateXPBoS;
