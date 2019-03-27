@@ -6,7 +6,7 @@
 
 % Open a TCP/IP server & wait for connection.
 disp('Opening server connection. Please start the APO control software now.')
-t = tcpip('localhost', 10003, 'NetworkRole', 'server');
+t = tcpip('0.0.0.0', 10003, 'NetworkRole', 'server');
 t.InputBufferSize = 6; % 2 digits from each control parameter
 fopen(t);
 disp('Connected to APO.')
