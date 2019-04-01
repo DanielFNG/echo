@@ -1,4 +1,5 @@
-function result = computeMeanMetricDifference(input, comp, metric, varargin)
+function [result, sdev] = ...
+    computeMeanMetricDifference(input, comp, metric, varargin)
 % Computes the mean difference over GaitCycles between a metric & a given value.
 %
 % Input:
@@ -24,5 +25,6 @@ function result = computeMeanMetricDifference(input, comp, metric, varargin)
     
     % Compute mean metric value.
     result = mean(abs(sample_data - comp));
+    sdev = std(abs(sample_data - comp));
 
 end

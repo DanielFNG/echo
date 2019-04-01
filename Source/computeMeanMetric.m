@@ -1,4 +1,4 @@
-function result = computeMeanMetric(input, metric, varargin)
+function [result, sdev] = computeMeanMetric(input, metric, varargin)
 % Computes the mean value of a metric given input GaitCycles.
 %
 % Input:
@@ -23,5 +23,6 @@ function result = computeMeanMetric(input, metric, varargin)
     
     % Compute mean metric value.
     result = mean(sample_data);
-
+    sdev = std(sample_data);
+    
 end
