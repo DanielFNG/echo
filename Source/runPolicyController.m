@@ -84,6 +84,7 @@ while G__iteration <= settings.max_iterations - 1
         results = old_results.resume('MaxObjectiveEvaluations', 1);
     catch err
         disp(err.message);
+        beep;
         input('Press enter when ready to retry.\n');
         results = old_results;
         G__iteration = G__iteration - 1;

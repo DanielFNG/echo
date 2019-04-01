@@ -3,7 +3,7 @@
 % script to run the policy controller. 
 
 % Save file name - where the bayesopt results will be saved.
-settings.save_file = 'chris-online-copd-x.mat';
+settings.save_file = 'wut.mat';
 
 % Operation mode - online or offline.
 settings.operation_mode = 'online';
@@ -31,9 +31,9 @@ settings.grf_rotations = {0,90,0};
 % Valid ranges for the control parameters. NOTE: if
 % multiplier*min_rise_range is less than 10, we will have problems with the
 % TCP-IP solution. 
-settings.rise_range = [30, 50];
-settings.peak_range = [35, 70];
-settings.fall_range = [40, 90];
+settings.rise_range = [40, 75];
+settings.peak_range = [40, 90];
+settings.fall_range = [45, 99];
 
 % Control parameter variables.
 settings.multiplier = 1;
@@ -49,20 +49,20 @@ settings.baseline_filename = 'baseline';
 settings.server = t;
 
 % Metric specific settings.
-settings.metric = @calculateCoPD;
-settings.args = {'x'};
+settings.metric = @calculateTotalTime;
+settings.args = {};
 settings.opensim_analyses = {};
 settings.motion_analyses = {'GRF'};
 
 % Filestructure.
-settings.base_dir = 'D:\Share\Shared_Data\HIL\Data Collection\CoPD-X';
+settings.base_dir = 'D:\Share\Shared_Data\HIL\Data Collection\Cadence';
 settings.v_name = 'markers';
 settings.d_name = 'grf';
 settings.v_format = '%02i';  % # of leading 0's in Vicon (trc) filenames 
 settings.d_format = '%04i';  % # of leading 0's in D-Flow (txt) filenames
 
 % Bayesian optimisation settings. 
-settings.max_iterations = 24;
+settings.max_iterations = 20;
 settings.acquisition_function = 'expected-improvement';
 
 % Additional arguments to the bayesopt function. 
