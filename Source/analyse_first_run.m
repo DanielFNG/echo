@@ -11,11 +11,12 @@ toe_length = 0.08;
 analyses = {'GRF'};
 grf_cutoff = 2;
 iterations = 20;
-metric = @calculateTotalTime;
-metric_args = {};
+metric = @calculateCoPD;
+metric_args = {'x'};
+base = 'D:\Dropbox\PhD\HIL Control\CoPD-X-MoreData';
 
 %% Compute the baseline.
-root = 'D:\Dropbox\PhD\HIL Control\Cadence\baseline\right\GRF';
+root = [base filesep 'baseline\right\GRF'];
 
 [n_grfs, grfs] = getFilePaths(root, '.mot');
 
@@ -30,7 +31,7 @@ end
 baseline = computeMeanMetric(cycles, metric, metric_args{:});
 
 %% Compute the result for each trial
-root = 'D:\Dropbox\PhD\HIL Control\Cadence\processed';
+root = [base filesep 'processed'];
 result = zeros(1, iterations);
 sdev = result;
 
