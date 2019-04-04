@@ -21,6 +21,9 @@ function [result, sdev] = computeMeanMetric(input, metric, varargin)
         sample_data(i) = metric(gait_cycle, varargin{:});
     end
     
+    % Remove outliers.
+    sample_data = sample_data(~isoutlier(sample_data));
+    
     % Compute mean metric value.
     result = mean(sample_data);
     sdev = std(sample_data);

@@ -35,7 +35,7 @@ root = [base filesep 'processed'];
 result = zeros(1, iterations);
 sdev = result;
 
-for iter = 1:iterations
+for iter = [1:11,13:iterations]
     inner = [root filesep 'iteration' sprintf('%03i', iter) filesep ...
         'right' filesep 'GRF'];
     
