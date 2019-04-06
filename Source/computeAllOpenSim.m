@@ -1,3 +1,5 @@
+final_save_dir = 'D:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Results';
+
 osim = 'D:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Baseline\No APO\OpenSim';
 root = 'D:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Baseline\No APO\Processed';
 model = 'D:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Models\no_APO.osim';
@@ -16,12 +18,12 @@ for i=1:n_folders
     n_osts = length(osts{i});
     gait{i} = cell(1, n_osts);
     for j=1:n_osts
-        motion_data = MotionData(osts{i}{j}, {'Markers', 'GRF', 'BK', 'IK'}, 0.8, 'x');
+        motion_data = MotionData(osts{i}{j}, 0.93, 0.08, {'Markers', 'GRF', 'BK', 'IK'}, 2);
         gait{i}{j} = GaitCycle(motion_data);
     end
 end
 
-save('gait-baseline-no_APO.mat', 'gait');
+save([final_save_dir filesep 'gait-baseline-no_APO.mat'], 'gait');
 clear('gait');
 
 osim = 'D:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Baseline\APO\OpenSim';
@@ -42,12 +44,12 @@ for i=1:n_folders
     n_osts = length(osts{i});
     gait{i} = cell(1, n_osts);
     for j=1:n_osts
-        motion_data = MotionData(osts{i}{j}, {'Markers', 'GRF', 'BK', 'IK'}, 0.8, 'x');
+        motion_data = MotionData(osts{i}{j}, 0.93, 0.08, {'Markers', 'GRF', 'BK', 'IK'}, 2);
         gait{i}{j} = GaitCycle(motion_data);
     end
 end
 
-save('gait-baseline-APO.mat', 'gait');
+save([final_save_dir filesep 'gait-baseline-APO.mat'], 'gait');
 clear('gait');
 
 osim = 'D:\Dropbox\PhD\HIL Control\HIL Span\Organised for testing HIL\Data\OpenSim';
@@ -68,10 +70,10 @@ for i=1:n_folders
     n_osts = length(osts{i});
     gait{i} = cell(1, n_osts);
     for j=1:n_osts
-        motion_data = MotionData(osts{i}{j}, {'Markers', 'GRF', 'BK', 'IK'}, 0.8, 'x');
+        motion_data = MotionData(osts{i}{j}, 0.93, 0.08, {'Markers', 'GRF', 'BK', 'IK'}, 2);
         gait{i}{j} = GaitCycle(motion_data);
     end
 end
 
-save('gait-APO.mat', 'gait');
+save([final_save_dir filesep 'gait-APO.mat'], 'gait');
 clear('gait');
