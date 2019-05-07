@@ -1,24 +1,28 @@
 %% The stuff that probably has to change/be looked over between experiments.
 
 % Save file name - where the bayesopt results will be saved.
-settings.save_file = 'calum_peak_hip.mat';
+settings.save_file = 'chris_xpmos_min_baseline.mat';
 
 % Data inputs - markers only, grfs only, or both (motion).
 settings.data_inputs = 'Motion';
 
 % Subject specific settings.
 settings.model_file = 'C:\Users\danie\Documents\GitHub\echo\Source\calum_scaled.osim';
-settings.leg_length = 0.91;
-settings.toe_length = 0.085;
+settings.leg_length = 0.93;
+settings.toe_length = 0.08;
 
 % Metric specific settings.
-settings.metric = @calculatePeak;
-settings.args = {'hip_flexion_r'};
-settings.opensim_analyses = {'IK'};
-settings.motion_analyses = {'GRF', 'IK'};
+settings.metric = @calculateXPMoS;
+settings.args = {'x', 'min'};
+settings.opensim_analyses = {'IK', 'BK'};
+settings.motion_analyses = {'GRF', 'Markers', 'IK', 'BK'};
+
+% Baseline mode - none, absolute or relative.
+settings.baseline_mode = 'absolute';
+settings.baseline_filename = 'baseline';
 
 % Data directory.
-settings.base_dir = 'D:\Share\Shared_Data\HIL\Data Collection With Kinematics\Calum Peak Hip';
+settings.base_dir = 'D:\Share\Shared_Data\HIL\Data Collection With Kinematics\Chris XPMoS Min Baseline';
 
 %% The stuff that probably doesn't have to change/be looked over.
 
@@ -48,21 +52,17 @@ settings.fall_range = [45, 99];
 settings.multiplier = 1;
 settings.min_length = 10;
 
-% Baseline mode - none, absolute or relative.
-settings.baseline_mode = 'absolute';
-settings.baseline_filename = 'baseline';
-
 % Communication - this should be an active TCPIP server. 
 settings.server = t;
 
 % Data filestructure.
 settings.v_name = 'markers';
 settings.d_name = 'grf';
-settings.v_format = '%02i';  % # of leading 0's in Vicon (trc) filenames 
+settings.v_format = '%03i';  % # of leading 0's in Vicon (trc) filenames 
 settings.d_format = '%04i';  % # of leading 0's in D-Flow (txt) filenames
 
 % Bayesian optimisation settings. 
-settings.max_iterations = 20;
+settings.max_iterations = 18;
 settings.acquisition_function = 'expected-improvement';
 settings.bayesopt_args = {};  % stuff like exploration ratio would be here
 
