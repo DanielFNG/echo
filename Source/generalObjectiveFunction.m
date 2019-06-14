@@ -5,7 +5,7 @@ function result = generalObjectiveFunction(X, settings)
     function paths = constructPaths(settings, G__iteration)
         % Construct the mid-level strings & paths for the policy controller.
         
-        % Marker & grf file names.
+        % File names.
         paths.strings.markers = ...
             [settings.v_name sprintf(settings.v_format, G__iteration)];
         paths.strings.grfs = ...
@@ -14,6 +14,7 @@ function result = generalObjectiveFunction(X, settings)
         % Raw marker & grf files.
         paths.files.markers = [];
         paths.files.grfs = [];
+        paths.files.emg = [];
         switch settings.data_inputs
             case 'Motion'
                 paths.files.markers = [settings.base_dir filesep ...
@@ -23,9 +24,11 @@ function result = generalObjectiveFunction(X, settings)
             case 'Markers'
                 paths.files.markers = [settings.base_dir filesep ...
                     paths.strings.markers '.trc'];
-            case 'GRF'
+            case {'GRF', 'EMG'}
                 paths.files.grfs = [settings.base_dir filesep ...
                     paths.strings.grfs '.txt'];
+                paths.files.emg = [settings.base_dir filesep ...
+                    paths.strings.grfs '.csv'];
         end
         
         % Inner-level directories for saving segmentation & OpenSim results.
@@ -45,17 +48,17 @@ function result = generalObjectiveFunction(X, settings)
         case 'online'
 
             % Apply APO torque pattern.
-            sendControlParameters(settings.server, rise, peak, fall);
-            %fprintf('\nApply rise %i, peak %i, fall %i.\n', rise, peak, fall);
-            %beep;
-            %input('Press any key to continue.');
+            %sendControlParameters(settings.server, rise, peak, fall);
+            fprintf('\nApply rise %i, peak %i, fall %i.\n', rise, peak, fall);
+            beep;
+            input('Press any key to continue.');
 
             % Construct filenames & create directories.
             paths = constructPaths(settings, G__iteration);
 
             % Obtain gait cycles from raw data processing.
-            cycles = processRawData(paths.files.markers, paths.files.grfs, ...
-                paths.directories.segmented_inner, ...
+            [cycles, times] = processRawData(paths.files.markers, ...
+                paths.files.grfs, paths.directories.segmented_inner, ...
                 paths.directories.opensim_inner, settings);
 
         case 'offline'
@@ -71,8 +74,14 @@ function result = generalObjectiveFunction(X, settings)
     switch settings.baseline_mode
         case 'absolute'
             % Compute & report difference from baseline.
-            result = computeMeanMetricDifference(...
-                cycles, settings.baseline, settings.metric, settings.args{:});
+            switch settings.data_inputs
+                case 'EMG'
+                    emg_data = parseEMGDataFaster(paths.files.emg);
+                    result = calculateEMGScore(emg_data, times);
+                otherwise
+                    result = computeMeanMetricDifference(cycles, ...
+                        settings.baseline, settings.metric, settings.args{:});
+            end
         case 'relative'
             % Calculate the relative baseline for this trial, not yet
             % implemented...

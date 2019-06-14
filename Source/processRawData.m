@@ -1,9 +1,11 @@
-function cycles = processRawData(markers, grfs, save_dir, osim_dir, settings)
+function [cycles, times] = ...
+    processRawData(markers, grfs, save_dir, osim_dir, settings)
 
-    function process(markers, grfs, save_dir, settings)
+    function times = process(markers, grfs, save_dir, settings)
+        times = 0;
         if isempty(markers)
-            processGRFData(save_dir, grfs, settings.grf_rotations, false, ...
-                settings.speed, settings.direction, ...
+            times = processGRFData(save_dir, grfs, settings.grf_rotations, ...
+                false, settings.speed, settings.direction, ...
                 settings.feet, settings.segmentation_mode, ...
                 settings.segmentation_cutoff, 'GRF');
         elseif isempty(grfs)
@@ -43,7 +45,7 @@ function cycles = processRawData(markers, grfs, save_dir, osim_dir, settings)
 
     % Process the data, fixing any gaps at the start/end of trials.
     try
-        process(markers, grfs, save_dir, settings);
+        times = process(markers, grfs, save_dir, settings);
     catch err
         if strcmp(err.identifier, 'Data:Gaps')
 
