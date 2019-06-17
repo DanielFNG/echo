@@ -1,0 +1,7 @@
+Devices
+1000
+		LEFT FP - Force			LEFT FP - Moment			LEFT FP - CoP			RIGHT FP - Force			RIGHT FP - Moment			RIGHT FP - CoP			
+Frame	Sub Frame	Fx	Fy	Fz	Mx	My	Mz	Cx	Cy	Cz	Fx	Fy	Fz	Mx	My	Mz	Cx	Cy	Cz
+		N	N	N	N.mm	N.mm	N.mm	mm	mm	mm	N	N	N	N.mm	N.mm	N.mm	mm	mm	mm
+0
+
