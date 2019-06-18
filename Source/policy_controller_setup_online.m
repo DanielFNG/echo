@@ -22,7 +22,7 @@ settings.baseline_mode = 'absolute';
 settings.baseline_filename = 'baseline';
 
 % Data directory.
-settings.base_dir = 'C:\Users\danie\Documents\GitHub\echo\Source';
+settings.base_dir = 'D:\Vicon Install Nov 2018\Normal\EMG Testing\Testing HIL EMG';
 
 %% The stuff that probably doesn't have to change/be looked over.
 

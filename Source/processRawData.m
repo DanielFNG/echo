@@ -24,12 +24,19 @@ function [cycles, times] = ...
         end
     end
 
-    if strcmp(settings.operation_mode, 'online') && ~isempty(markers)
-        % Wait until raw vicon data is available.
-        [path, name, ~] = fileparts(markers);
-        trial_name = [path filesep name];
-        waitUntilWritable([trial_name '.x2d'], 2);
-        processViconData(trial_name);
+    if strcmp(settings.operation_mode, 'online')
+        if ~isempty(markers)
+            % Wait until raw vicon data is available.
+            [path, name, ~] = fileparts(markers);
+            trial_name = [path filesep name];
+            waitUntilWritable([trial_name '.x2d'], 2);
+            processViconData(trial_name);
+        else
+            [path, name, ~] = fileparts(grfs);
+            trial_name = [path filesep name];
+            waitUntilWritable([trial_name '.x2d'], 2);
+            processViconEMG(trial_name);
+        end
     end
 
     % Wait until data has finished being printed.
