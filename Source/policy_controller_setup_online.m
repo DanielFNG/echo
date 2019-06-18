@@ -12,17 +12,17 @@ settings.leg_length = 0.93;
 settings.toe_length = 0.08;
 
 % Motion metric specific settings.
-settings.metric = @calculateXPMoS;
-settings.args = {'x', 'min'};
-settings.opensim_analyses = {'IK', 'BK'};
-settings.motion_analyses = {'GRF', 'Markers', 'IK', 'BK'};
+settings.metric = [];
+settings.args = [];
+settings.opensim_analyses = {};
+settings.motion_analyses = {'GRF'};
 
 % Baseline mode - none, absolute or relative.
 settings.baseline_mode = 'absolute';
 settings.baseline_filename = 'baseline';
 
 % Data directory.
-settings.base_dir = 'D:\Vicon Install Nov 2018\Normal\EMG Testing\Testing HIL EMG';
+settings.base_dir = 'C:\Users\danie\Documents\GitHub\echo\Source';
 
 %% The stuff that probably doesn't have to change/be looked over.
 

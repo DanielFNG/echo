@@ -10,7 +10,7 @@ function score = calculateEMGScore(emg_data, seg_times)
 %       - score, the averaged integrated EMG signal for each gait cycle
 
     % Process the EMG data.
-    voltage_cols = emg_data.getStateIndices();
+    voltage_cols = 3:emg_data.NCols;
     for col = voltage_cols
         signal = emg_data.getColumn(col);
         signal = processEMGSignal(signal);
@@ -34,7 +34,7 @@ function score = calculateEMGScore(emg_data, seg_times)
         value = 0;
         for j=1:n_cycles
             time = emg_set{j}.getTimesteps();
-            value = value + trapz(times, ...
+            value = value + trapz(time, ...
                 emg_set{j}.getColumn(voltage_cols(i)));
         end
         value_set(i) = value/n_cycles;
