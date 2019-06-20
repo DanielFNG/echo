@@ -86,9 +86,17 @@ function result = generalObjectiveFunction(X, settings)
             % Calculate the relative baseline for this trial, not yet
             % implemented...
         case 'none'
-            % Compute & report mean metric value
-            result = ...
-                computeMeanMetric(cycles, settings.metric, settings.args{:});
+            switch settings.data_inputs
+                case 'EMG'
+                    emg_data = parseEMGDataFaster(paths.files.emg);
+                    disp('EMG parsed');
+                    result = calculateEMGScore(emg_data, times);
+                    disp('EMG score scomputed');
+                otherwise
+                    % Compute & report mean metric value
+                    result = computeMeanMetric(...
+                        cycles, settings.metric, settings.args{:});
+            end
     end
 
 end

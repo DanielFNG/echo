@@ -1,6 +1,8 @@
 function emg = parseEMGDataFaster(filename)
 % Read raw EMG data from Vicon and produce a TXTData object.
 
+    tic;
+
     id = fopen(filename);
     
     % Disregard the header, comprising the first 3 frames.
@@ -15,8 +17,12 @@ function emg = parseEMGDataFaster(filename)
     % Disregard the next line.
     fgetl(id);
     
+    toc
+    
     % A different way.
     values = cell2mat(textscan(id, repmat('%f', 1, n_cols)));
+    
+    toc
     
     % Close the file.
     fclose(id);
@@ -32,7 +38,11 @@ function emg = parseEMGDataFaster(filename)
     values(:, 2) = 1:n_rows;
     values(:, 1) = 0.001*values(:, 2) - 0.001;
     
+    toc
+    
     % Create emg data.
     emg = TXTData(values, {}, labels);
+    
+    toc
 
 end

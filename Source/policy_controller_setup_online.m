@@ -1,7 +1,7 @@
 %% The stuff that probably has to change/be looked over between experiments.
 
 % Save file name - where the bayesopt results will be saved.
-settings.save_file = 'testing_emg_stuff.mat';
+settings.save_file = 'testing_emg_stuff_more_sensors.mat';
 
 % Data inputs - markers only, grfs only, motion (both), emg (emg + grf).
 settings.data_inputs = 'EMG';
@@ -18,11 +18,11 @@ settings.opensim_analyses = {};
 settings.motion_analyses = {'GRF'};
 
 % Baseline mode - none, absolute or relative.
-settings.baseline_mode = 'absolute';
-settings.baseline_filename = 'baseline';
+settings.baseline_mode = 'none';
+settings.baseline_filename = 'emg_more';
 
 % Data directory.
-settings.base_dir = 'D:\Vicon Install Nov 2018\Normal\EMG Testing\Testing HIL EMG';
+settings.base_dir = 'D:\Vicon Install Nov 2018\Normal\EMG Testing\Test With More Sensors';
 
 %% The stuff that probably doesn't have to change/be looked over.
 
@@ -50,14 +50,14 @@ settings.fall_range = [45, 99];
 
 % Control parameter variables.
 settings.multiplier = 1;
-settings.min_length = 10;
+settings.min_length = 20;
 
 % Communication - this should be an active TCPIP server. 
 settings.server = t;
 
 % Data filestructure.
-settings.v_name = 'emg';
-settings.d_name = 'emg';
+settings.v_name = 'emg_more';
+settings.d_name = 'emg_more';
 settings.v_format = '%03i';  % # of leading 0's in Vicon (trc) filenames 
 settings.d_format = '%03i';  % # of leading 0's in D-Flow (txt) filenames
 

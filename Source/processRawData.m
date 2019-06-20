@@ -91,12 +91,16 @@ function [cycles, times] = ...
     n_samples = length(trials);
 
     % Create gait cycles.
-    cycles = cell(n_samples, 1);
-    for i=1:n_samples
-        motion = MotionData(trials{i}, settings.leg_length, ...
-            settings.toe_length, settings.motion_analyses, ...
-            settings.segmentation_cutoff);
-        cycles{i} = GaitCycle(motion);
+    if ~strcmp(settings.data_inputs, 'EMG')
+        cycles = cell(n_samples, 1);
+        for i=1:n_samples
+            motion = MotionData(trials{i}, settings.leg_length, ...
+                settings.toe_length, settings.motion_analyses, ...
+                settings.segmentation_cutoff);
+            cycles{i} = GaitCycle(motion);
+        end
+    else
+        cycles = 0;
     end
 
 end
