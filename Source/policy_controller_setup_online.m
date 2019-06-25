@@ -63,8 +63,8 @@ settings.d_format = '%03i';  % # of leading 0's in D-Flow (txt) filenames
 
 % Bayesian optimisation settings. 
 settings.max_iterations = 18;
-settings.acquisition_function = 'expected-improvement';
-settings.bayesopt_args = {};  % stuff like exploration ratio would be here
+settings.acquisition_function = 'expected-improvement-plus';
+settings.bayesopt_args = {'ExplorationRatio', 0.7};  % stuff like exploration ratio would be here
 
 %% Run
 
