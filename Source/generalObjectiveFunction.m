@@ -8,8 +8,12 @@ function result = generalObjectiveFunction(X, settings)
         % File names.
         paths.strings.markers = [settings.v_name sprintf(settings.v_format, ...
             settings.iter_func(G__iteration))];
+        [settings.v_name sprintf(settings.v_format, ...
+            settings.iter_func(G__iteration))]
         paths.strings.grfs = [settings.d_name sprintf(settings.d_format, ...
-            G__iteration)];
+            settings.iter_func(G__iteration))];
+        [settings.d_name sprintf(settings.d_format, ...
+            settings.iter_func(G__iteration))]
         
         % Raw marker & grf files.
         paths.files.markers = [];

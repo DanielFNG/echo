@@ -1,7 +1,7 @@
 %% The stuff that probably has to change/be looked over between experiments.
 
 % Save file name - where the bayesopt results will be saved.
-settings.save_file = 'testing_emg_stuff_more_sensors.mat';
+settings.save_file = 'testing_emg_stuff_reference_second_go.mat';
 
 % Data inputs - markers only, grfs only, motion (both), emg (emg + grf).
 settings.data_inputs = 'EMG';
@@ -19,10 +19,10 @@ settings.motion_analyses = {'GRF'};
 
 % Baseline mode - none, absolute or relative.
 settings.baseline_mode = 'none';
-settings.baseline_filename = 'emg_more';
+settings.baseline_filename = 'emg_second_go';
 
 % Data directory.
-settings.base_dir = 'D:\Vicon Install Nov 2018\Normal\EMG Testing\Test With More Sensors';
+settings.base_dir = 'D:\Vicon Install Nov 2018\Normal\EMG Testing\More Exploration + Reference Data';
 
 %% The stuff that probably doesn't have to change/be looked over.
 
@@ -56,8 +56,8 @@ settings.min_length = 20;
 settings.server = t;
 
 % Data filestructure.
-settings.v_name = 'emg_more';
-settings.d_name = 'emg_more';
+settings.v_name = 'emg_second_go';
+settings.d_name = 'emg_second_go';
 settings.v_format = '%03i';  % # of leading 0's in Vicon (trc) filenames 
 settings.d_format = '%03i';  % # of leading 0's in D-Flow (txt) filenames
 
