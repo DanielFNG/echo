@@ -6,10 +6,10 @@ function result = generalObjectiveFunction(X, settings)
         % Construct the mid-level strings & paths for the policy controller.
         
         % File names.
-        paths.strings.markers = ...
-            [settings.v_name sprintf(settings.v_format, G__iteration)];
-        paths.strings.grfs = ...
-            [settings.d_name sprintf(settings.d_format, G__iteration)];
+        paths.strings.markers = [settings.v_name sprintf(settings.v_format, ...
+            settings.iter_func(G__iteration))];
+        paths.strings.grfs = [settings.d_name sprintf(settings.d_format, ...
+            G__iteration)];
         
         % Raw marker & grf files.
         paths.files.markers = [];
