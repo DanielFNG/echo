@@ -32,20 +32,34 @@ if strcmp(settings.baseline_mode, 'absolute')
         case 'Markers'
             markers = [settings.base_dir filesep ...
                 settings.baseline_filename '.trc'];
-        case 'GRF'
+        case {'GRF', 'EMG'}
             grfs = [settings.base_dir filesep ...
                 settings.baseline_filename '.txt'];
     end
     
     % Obtain gait cycles from raw data processing.
     osim_dir = [settings.dirs.opensim filesep 'baseline'];
-    cycles = processRawData(...
+    [cycles, times] = processRawData(...
         markers, grfs, settings.dirs.baseline, osim_dir, settings);
     
-    % Compute the mean value of the metric from the baseline data, & use
-    % this as the baseline going forward.
-    settings.baseline = computeMeanMetric(...
-        cycles, settings.metric, settings.args{:});
+    switch settings.data_inputs
+        case 'EMG'
+            if strcmp(settings.data_inputs, 'EMG')
+                emg = [settings.base_dir filesep ...
+                    settings.baseline_filename '.csv'];
+            end
+            
+            % Load emg data.
+            emg_data = parseEMGDataFaster(emg);
+            
+            % Obtain baseline EMG data.
+            settings.baseline = calculateEMGScore(emg_data, times);
+        otherwise
+            % Compute the mean value of the metric from the baseline data, & use
+            % this as the baseline going forward.
+            settings.baseline = computeMeanMetric(...
+                cycles, settings.metric, settings.args{:});
+    end
     
     % More handy output.
     input(['\nBaseline computation complete.\nPress return once you have' ...

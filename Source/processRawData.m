@@ -1,9 +1,11 @@
-function cycles = processRawData(markers, grfs, save_dir, osim_dir, settings)
+function [cycles, times] = ...
+    processRawData(markers, grfs, save_dir, osim_dir, settings)
 
-    function process(markers, grfs, save_dir, settings)
+    function times = process(markers, grfs, save_dir, settings)
+        times = 0;
         if isempty(markers)
-            processGRFData(save_dir, grfs, settings.grf_rotations, false, ...
-                settings.speed, settings.direction, ...
+            times = processGRFData(save_dir, grfs, settings.grf_rotations, ...
+                false, settings.speed, settings.direction, ...
                 settings.feet, settings.segmentation_mode, ...
                 settings.segmentation_cutoff, 'GRF');
         elseif isempty(grfs)
@@ -22,12 +24,19 @@ function cycles = processRawData(markers, grfs, save_dir, osim_dir, settings)
         end
     end
 
-    if strcmp(settings.operation_mode, 'online') && ~isempty(markers)
-        % Wait until raw vicon data is available.
-        [path, name, ~] = fileparts(markers);
-        trial_name = [path filesep name];
-        waitUntilWritable([trial_name '.x2d'], 2);
-        processViconData(trial_name);
+    if strcmp(settings.operation_mode, 'online')
+        if ~isempty(markers)
+            % Wait until raw vicon data is available.
+            [path, name, ~] = fileparts(markers);
+            trial_name = [path filesep name];
+            waitUntilWritable([trial_name '.x2d'], 2);
+            processViconData(trial_name);
+        else
+            [path, name, ~] = fileparts(grfs);
+            trial_name = [path filesep name];
+            waitUntilWritable([trial_name '.x2d'], 2);
+            processViconEMG(trial_name);
+        end
     end
 
     % Wait until data has finished being printed.
@@ -43,7 +52,7 @@ function cycles = processRawData(markers, grfs, save_dir, osim_dir, settings)
 
     % Process the data, fixing any gaps at the start/end of trials.
     try
-        process(markers, grfs, save_dir, settings);
+        times = process(markers, grfs, save_dir, settings);
     catch err
         if strcmp(err.identifier, 'Data:Gaps')
 
@@ -69,25 +78,30 @@ function cycles = processRawData(markers, grfs, save_dir, osim_dir, settings)
     grf_folder = [save_dir filesep 'right' filesep 'GRF'];
     switch settings.data_inputs
         case 'Motion'
-            trials = runBatch(settings.opensim_analyses, settings.model_file,...
-                markers_folder, osim_dir, grf_folder);
-        case 'GRF'
-            trials = runBatch(settings.opensim_analyses, settings.model_file,...
-                [], osim_dir, grf_folder);
+            trials = createTrials(settings.model_file, markers_folder, ...
+                osim_dir, grf_folder);
+        case {'GRF', 'EMG'}
+            trials = createTrials(settings.model_file, [], ...
+                osim_dir, grf_folder);
         case 'Markers'
-            trials = runBatch(settings.opensim_analyses, settings.model_file,...
-                markers_folder, osim_dir, []);
+            trials = createTrials(settings.model_file, markers_folder, ...
+                osim_dir, []);
     end
+    runBatch(settings.opensim_analyses, trials);
             
     n_samples = length(trials);
 
     % Create gait cycles.
-    cycles = cell(n_samples, 1);
-    for i=1:n_samples
-        motion = MotionData(trials{i}, settings.leg_length, ...
-            settings.toe_length, settings.motion_analyses, ...
-            settings.segmentation_cutoff);
-        cycles{i} = GaitCycle(motion);
+    if ~strcmp(settings.data_inputs, 'EMG')
+        cycles = cell(n_samples, 1);
+        for i=1:n_samples
+            motion = MotionData(trials{i}, settings.leg_length, ...
+                settings.toe_length, settings.motion_analyses, ...
+                settings.segmentation_cutoff);
+            cycles{i} = GaitCycle(motion);
+        end
+    else
+        cycles = 0;
     end
 
 end

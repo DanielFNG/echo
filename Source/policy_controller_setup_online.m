@@ -1,28 +1,28 @@
 %% The stuff that probably has to change/be looked over between experiments.
 
 % Save file name - where the bayesopt results will be saved.
-settings.save_file = 'chris_xpmos_min_baseline.mat';
+settings.save_file = 'testing_emg_stuff_reference_second_go.mat';
 
-% Data inputs - markers only, grfs only, or both (motion).
-settings.data_inputs = 'Motion';
+% Data inputs - markers only, grfs only, motion (both), emg (emg + grf).
+settings.data_inputs = 'EMG';
 
 % Subject specific settings.
 settings.model_file = 'C:\Users\danie\Documents\GitHub\echo\Source\calum_scaled.osim';
 settings.leg_length = 0.93;
 settings.toe_length = 0.08;
 
-% Metric specific settings.
-settings.metric = @calculateXPMoS;
-settings.args = {'x', 'min'};
-settings.opensim_analyses = {'IK', 'BK'};
-settings.motion_analyses = {'GRF', 'Markers', 'IK', 'BK'};
+% Motion metric specific settings.
+settings.metric = [];
+settings.args = [];
+settings.opensim_analyses = {};
+settings.motion_analyses = {'GRF'};
 
 % Baseline mode - none, absolute or relative.
-settings.baseline_mode = 'absolute';
-settings.baseline_filename = 'baseline';
+settings.baseline_mode = 'none';
+settings.baseline_filename = 'emg_second_go';
 
 % Data directory.
-settings.base_dir = 'D:\Share\Shared_Data\HIL\Data Collection With Kinematics\Chris XPMoS Min Baseline';
+settings.base_dir = 'D:\Vicon Install Nov 2018\Normal\EMG Testing\More Exploration + Reference Data';
 
 %% The stuff that probably doesn't have to change/be looked over.
 
@@ -37,7 +37,7 @@ settings.direction = 'x';
 settings.feet = {'right'};
 settings.segmentation_mode = 'stance';
 settings.segmentation_cutoff = 2;
-settings.time_delay = 16*(1/600);  
+settings.time_delay = 0; %16*(1/600);  
 settings.marker_rotations = {0,90,0};  
 settings.grf_rotations = {0,90,0};
 
@@ -50,21 +50,22 @@ settings.fall_range = [45, 99];
 
 % Control parameter variables.
 settings.multiplier = 1;
-settings.min_length = 10;
+settings.min_length = 20;
 
 % Communication - this should be an active TCPIP server. 
 settings.server = t;
 
 % Data filestructure.
-settings.v_name = 'markers';
-settings.d_name = 'grf';
+settings.v_name = 'emg_second_go';
+settings.d_name = 'emg_second_go';
 settings.v_format = '%03i';  % # of leading 0's in Vicon (trc) filenames 
-settings.d_format = '%04i';  % # of leading 0's in D-Flow (txt) filenames
+settings.d_format = '%03i';  % # of leading 0's in D-Flow (txt) filenames
 
 % Bayesian optimisation settings. 
+settings.iter_func = @(x) 2*x - 1;
 settings.max_iterations = 18;
-settings.acquisition_function = 'expected-improvement';
-settings.bayesopt_args = {};  % stuff like exploration ratio would be here
+settings.acquisition_function = 'expected-improvement-plus';
+settings.bayesopt_args = {'ExplorationRatio', 0.7};  % stuff like exploration ratio would be here
 
 %% Run
 
