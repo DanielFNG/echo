@@ -2,7 +2,7 @@ root = 'D:\Dropbox\PhD\EMG Test Data (Reference 2)';
 raw = [root filesep 'Collected Data'];
 processed = [root filesep 'Processed'];
 
-rotations = {0,90,0};
+system.forward = ... % Needs filled in
 speed = 1.0;
 direction = 'x';
 feet = {'left'};
@@ -15,8 +15,8 @@ for i=0:36
     seg_dir = [processed filesep 'seg' sprintf('%03i', i)];
     osim_dir = [];
     
-    times = processGRFData(seg_dir, grf_file, rotations, false, speed, ...
-        direction, feet, mode, cutoff, 'GRF');
+    times = processGRFData(seg_dir, grf_file, system, speed, ...
+        feet, mode, cutoff, 'GRF');
     emg_data = parseEMGDataFaster(emg_file);
     
     % Segment the EMG data.
