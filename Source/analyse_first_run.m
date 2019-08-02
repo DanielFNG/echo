@@ -6,27 +6,32 @@
 clear;
 
 %% Common info
-model = 'C:\Users\danie\Documents\GitHub\echo\Source\chris_scaled.osim';
-kinematics = [];
+model = 'C:\Users\danie\Documents\GitHub\echo\Source\calum_scaled.osim';
 save_dir = 'analysing_first_run';
-leg_length = 0.93;
-toe_length = 0.08;
-analyses = {'GRF'};
+leg_length = 0.91;
+toe_length = 0.085;
+analyses = {'GRF', 'IK'};
+osim_analyses = {'IK'};
 grf_cutoff = 2;
 iterations = 20;
-metric = @calculateTotalTime;
-metric_args = {};
-base = 'D:\Dropbox\PhD\HIL Control\Cadence';
+metric = @calculatePeak;
+metric_args = {'hip_flexion_r'};
+base = 'D:\Dropbox\Presentation Data\Calum Peak Hip';
 
 %% Compute the baseline.
 root = [base filesep 'baseline\right\GRF'];
 
 [n_grfs, grfs] = getFilePaths(root, '.mot');
 
+root = [base filesep 'baseline\right\Markers'];
+
+[~, kinematics] = getFilePaths(root, '.trc');
+
 cycles{n_grfs} = {};
 
 for i=1:n_grfs
-    trial = OpenSimTrial(model, kinematics, save_dir, grfs{i});
+    trial = OpenSimTrial(model, kinematics{i}, save_dir, grfs{i});
+    trial.run(osim_analyses);
     motion = MotionData(trial, leg_length, toe_length, analyses, grf_cutoff);
     cycles{i} = GaitCycle(motion);
 end
@@ -39,18 +44,24 @@ result = zeros(1, iterations);
 averages = zeros(1, iterations);
 sdev = result;
 
-for iter = [1:11,13:iterations]
+for iter = 1:iterations
     inner = [root filesep 'iteration' sprintf('%03i', iter) filesep ...
         'right' filesep 'GRF'];
     
     [n_grfs, grfs] = getFilePaths(inner, '.mot');
+    
+    inner = [root filesep 'iteration' sprintf('%03i', iter) filesep ...
+        'right' filesep 'Markers'];
+    
+    [~, kinematics] = getFilePaths(inner, '.trc');
     
     cycles = cell(1, n_grfs);
     
     cycle_data = zeros(1, n_grfs);
     
     for i=1:n_grfs
-        trial = OpenSimTrial(model, kinematics, save_dir, grfs{i});
+        trial = OpenSimTrial(model, kinematics{i}, save_dir, grfs{i});
+        trial.run(osim_analyses);
         motion = ...
             MotionData(trial, leg_length, toe_length, analyses, grf_cutoff);
         cycles{i} = GaitCycle(motion);
@@ -70,6 +81,6 @@ errorbar(1:iterations, result, sdev, '.');
 
 figure;
 bar(1:iterations, averages);
-hold on
-bar(12, baseline);
+%hold on
+%bar(12, baseline);
 
