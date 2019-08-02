@@ -1,7 +1,7 @@
 % Define suitable ranges for control parameters. 
-rise = [45, 50, 55];
-peak = [50, 55, 60];
-fall = [65, 70, 75];
+rise = 50; %rise = [45, 50, 55];
+peak = [55, 65, 75];
+fall = [75, 85, 95];
 
 % Suggest random combinations.
 combos = suggestRandomisedParameters(rise, peak, fall);
