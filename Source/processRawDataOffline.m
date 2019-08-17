@@ -4,6 +4,7 @@ processed = [root filesep 'Processed'];
 
 system.forward = ... % Needs filled in
 speed = 1.0;
+inclination = 0;
 direction = 'x';
 feet = {'left'};
 mode = 'stance';
@@ -15,7 +16,7 @@ for i=0:36
     seg_dir = [processed filesep 'seg' sprintf('%03i', i)];
     osim_dir = [];
     
-    times = processGRFData(seg_dir, grf_file, system, speed, ...
+    times = processGRFData(seg_dir, grf_file, system, speed, inclination, ...
         feet, mode, cutoff, 'GRF');
     emg_data = parseEMGDataFaster(emg_file);
     

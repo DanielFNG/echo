@@ -31,7 +31,7 @@ settings.operation_mode = 'online';
 
 % Experiment specific settings.
 settings.speed = 0.8;
-settings.direction = 'x';
+settings.inclination = 0;
 
 % Data processing specific settings.
 settings.feet = {'right'};
