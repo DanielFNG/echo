@@ -11,6 +11,9 @@ settings.model_file = 'C:\Users\danie\Documents\GitHub\echo\Source\calum_scaled.
 settings.leg_length = 0.93;
 settings.toe_length = 0.08;
 
+% Assistance magnitude. 
+settings.force = 10;
+
 % Motion metric specific settings.
 settings.metric = [];
 settings.args = [];

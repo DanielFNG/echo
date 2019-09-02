@@ -39,8 +39,9 @@ if strcmp(settings.baseline_mode, 'absolute')
     
     % Obtain gait cycles from raw data processing.
     osim_dir = [settings.dirs.opensim filesep 'baseline'];
-    [cycles, times] = processRawData(...
-        markers, grfs, settings.dirs.baseline, osim_dir, settings);
+    assistance_params = [];
+    [cycles, times] = processRawData(markers, grfs, settings.dirs.baseline, ...
+        osim_dir, settings, assistance_params);
     
     switch settings.data_inputs
         case 'EMG'

@@ -55,11 +55,15 @@ function result = generalObjectiveFunction(X, settings)
 
             % Construct filenames & create directories.
             paths = constructPaths(settings, G__iteration);
+            
+            % Construct assistance parameters.
+            params = constructAssistanceParams(...
+                settings.force, rise, peak, fall);
 
             % Obtain gait cycles from raw data processing.
             [cycles, times] = processRawData(paths.files.markers, ...
                 paths.files.grfs, paths.directories.segmented_inner, ...
-                paths.directories.opensim_inner, settings);
+                paths.directories.opensim_inner, settings, params);
 
         case 'offline'
 
