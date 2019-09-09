@@ -1,48 +1,51 @@
 %% The stuff that probably has to change/be looked over between experiments.
 
+% Data directory.
+settings.base_dir = 'D:\Vicon Install Nov 2018\Normal\HIL\S0';
+
 % Save file name - where the bayesopt results will be saved.
-settings.save_file = 'testing_emg_stuff_reference_second_go.mat';
+settings.save_file = [settings.base_dir filesep 'hil-results.mat'];
 
 % Data inputs - markers only, grfs only, motion (both), emg (emg + grf).
-settings.data_inputs = 'EMG';
+settings.data_inputs = 'Motion';
 
 % Subject specific settings.
-settings.model_file = 'C:\Users\danie\Documents\GitHub\echo\Source\calum_scaled.osim';
 settings.leg_length = 0.93;
 settings.toe_length = 0.08;
+settings.speed = 1.2;
 
 % Assistance magnitude. 
 settings.force = 10;
-
-% Motion metric specific settings.
-settings.metric = [];
-settings.args = [];
-settings.opensim_analyses = {};
-settings.motion_analyses = {'GRF'};
-
-% Baseline mode - none, absolute or relative.
-settings.baseline_mode = 'none';
-settings.baseline_filename = 'emg_second_go';
-
-% Data directory.
-settings.base_dir = 'D:\Vicon Install Nov 2018\Normal\EMG Testing\More Exploration + Reference Data';
 
 %% The stuff that probably doesn't have to change/be looked over.
 
 % Operation mode - online or offline.
 settings.operation_mode = 'online';
 
+% Motion metric specific settings.
+settings.metric = {@calculateMetabolicRate};
+settings.args = [];
+settings.opensim_analyses = {'IK', 'SO'};
+settings.motion_analyses = {'SO'};
+
+% Baseline mode - none, absolute or relative.
+settings.baseline_mode = 'none';
+settings.baseline_filename = [];
+
 % Experiment specific settings.
-settings.speed = 0.8;
 settings.inclination = 0;
 
 % Data processing specific settings.
 settings.feet = {'right'};
 settings.segmentation_mode = 'stance';
 settings.segmentation_cutoff = 2;
-settings.time_delay = 0; %16*(1/600);  
-settings.marker_rotations = {0,90,0};  
-settings.grf_rotations = {0,90,0};
+settings.time_delay = 0;
+settings.marker_system.forward = '+z';
+settings.marker_system.up = '+y';
+settings.marker_system.right = '-x';
+settings.grf_system.forward = '+y';
+settings.grf_system.up = '-z';
+settings.grf_system.right = '+x';
 
 % Valid ranges for the control parameters. NOTE: if
 % multiplier*min_rise_range is less than 10, we will have problems with the
