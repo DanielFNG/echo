@@ -10,12 +10,18 @@ settings.save_file = [settings.base_dir filesep 'hil-results.mat'];
 settings.data_inputs = 'Motion';
 
 % Subject specific settings.
+settings.mass = 81;
 settings.leg_length = 0.93;
 settings.toe_length = 0.08;
 settings.speed = 1.2;
 
 % Assistance magnitude. 
 settings.force = 10;
+
+% Co-ordinate system offsets - calculate these using motion function.
+settings.x_offset = 0;
+settings.y_offset = 0;
+settings.z_offset = 0;  
 
 %% The stuff that probably doesn't have to change/be looked over.
 
@@ -50,9 +56,9 @@ settings.grf_system.right = '+x';
 % Valid ranges for the control parameters. NOTE: if
 % multiplier*min_rise_range is less than 10, we will have problems with the
 % TCP-IP solution. 
-settings.rise_range = [40, 75];
+settings.rise_range = [30, 75];
 settings.peak_range = [40, 90];
-settings.fall_range = [45, 99];
+settings.fall_range = [50, 99];
 
 % Control parameter variables.
 settings.multiplier = 1;
@@ -62,19 +68,64 @@ settings.min_length = 20;
 settings.server = t;
 
 % Data filestructure.
-settings.v_name = 'emg_second_go';
-settings.d_name = 'emg_second_go';
-settings.v_format = '%03i';  % # of leading 0's in Vicon (trc) filenames 
-settings.d_format = '%03i';  % # of leading 0's in D-Flow (txt) filenames
+settings.name = 'capture';
+settings.format = '%03i';  % # of leading 0's in Vicon filenames 
 
 % Bayesian optimisation settings. 
-settings.iter_func = @(x) 2*x - 1;
-settings.max_iterations = 18;
+settings.iter_func = @(x) x;
+settings.max_iterations = 20;
 settings.acquisition_function = 'expected-improvement-plus';
 settings.bayesopt_args = {'ExplorationRatio', 0.7};  % stuff like exploration ratio would be here
 
 %% Run
 
+% Create models directory.
+model_dir = [settings.base_dir filesep 'Models'];
+mkdir(model_dir);
+
+% OpenSim model created & scaled. 
+input('Ensure the ''static.trc'' file has been created, input any key to continue.\n');
+static = [settings.base_dir filesep 'static.trc'];
+processStaticData(settings.base_dir, static, settings.marker_system);
+model = [model_dir filesep 'model.osim'];
+scaleModel(settings.mass, model, static);
+
+% OpenSim model adjusted.
+input('Ensure the inital walk ''walk.trc'' and ''walk.txt'' files have been created, input any key to continue.\n');
+raw_markers = [settings.base_dir filesep 'walk.trc'];
+raw_grf = [settings.base_dir filesep 'walk.txt'];
+processMotionData(settings.base_dir, settings.base_dir, raw_markers, raw_grf, ...
+    settings.marker_system, settings.grf_system, settings.x_offset, ...
+    settings.y_offset, settings.z_offset, settings.time_delay, ...
+    settings.speed, settings.inclination, [], settings.feet, settings.mode, ...
+    settings.cutoff, 'Markers', 'GRF');
+markers = [settings.base_dir filesep 'right' filesep 'Markers' filesep 'cycle01.trc'];
+grf = [settings.base_dir filesep 'right' filesep 'GRF' filesep 'cycle01.mot'];
+human_model = 'C:\OpenSim 3.3\Models\Gait2392_Simbody\gait2392_simbody.osim';
+settings.model = [model_dir filesep 'model_adjusted.osim'];
+adjustment_folder = [model_dir filesep 'Adjustment'];
+adjustModel(model, settings.model, human_model, markers, grf, adjustment_folder);
+input('Model adjustment completed. Input any key to confirm visual analysis of model and proceed to cadence computation.\n');
+
+% Optimal cadence computed.
+cadence_results = [settings.base_dir filesep 'Cadence'];
+trials = createTrials(settings.model, markers, cadence_results, grf);
+n_trials = length(trials);
+cadence_data = zeros(1, n_trials);
+analyses = {'GRF'};
+for i=1:n_trials
+    motion_data = MotionData(trials{i}, settings.leg_length, ...
+        settings.toe_length, analyses, settings.grf_cutoff);
+    cycle = GaitCycle(motion_data);
+    cadence_data(i) = 60/cycle.calculateTotalTime(); % steps/min e.g. bpm for metronome
+end
+cadence = round(mean(cadence_data));
+fprintf('Cadence calculation completed - set metronome to %i BPM.\n', cadence);
+
+% Reminder about first calorimetry measurement. 
+input('Input any key when first calorimetry walk has been completed. Remember vicon name change.\n');
+
 % Run policy controller. 
+input('All setup steps completed - input any key when ready to begin HIL policy controller.\n');
 runPolicyController(settings);
 
