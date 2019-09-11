@@ -9,13 +9,15 @@ function processViconData(trial)
 
     vicon.RunPipeline('Reconstruct And Label', '', timeout);
 
-    vicon.RunPipeline('Fill Small Gaps', '', timeout);
-    vicon.RunPipeline('Fill Medium Gaps', '', timeout);
+    vicon.RunPipeline('HIL Small Gaps', '', timeout);
+    vicon.RunPipeline('HIL Medium Gaps', '', timeout);
     vicon.RunPipeline('Fill Big Gaps', '', timeout);
     
     vicon.RunPipeline('Filter', '', timeout);
 
-    vicon.RunPipeline('Make TRC', '', timeout);
+    vicon.RunPipeline('Export GRF Full Frames Only', '', timeout);
+    vicon.RunPipeline('Export TRC Full Frames Only', '', timeout);
+    vicon.RunPipeline('');
     vicon.SaveTrial(timeout);
     
     moveAndClick(70, 50);

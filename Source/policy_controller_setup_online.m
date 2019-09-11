@@ -74,6 +74,7 @@ settings.format = '%03i';  % # of leading 0's in Vicon filenames
 % Bayesian optimisation settings. 
 settings.iter_func = @(x) x;
 settings.max_iterations = 20;
+settings.num_seed_points = 8;  % 8 fully randomised measurements first
 settings.acquisition_function = 'expected-improvement-plus';
 settings.bayesopt_args = {'ExplorationRatio', 0.7};  % stuff like exploration ratio would be here
 

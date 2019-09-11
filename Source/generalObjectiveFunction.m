@@ -6,9 +6,7 @@ function result = generalObjectiveFunction(X, settings)
         % Construct the mid-level strings & paths for the policy controller.
         
         % File names.
-        paths.strings.markers = [settings.v_name sprintf(settings.v_format, ...
-            settings.iter_func(G__iteration))];
-        paths.strings.grfs = [settings.d_name sprintf(settings.d_format, ...
+        paths.name = [settings.name sprintf(settings.format, ...
             settings.iter_func(G__iteration))];
         
         % Raw marker & grf files.
@@ -18,17 +16,17 @@ function result = generalObjectiveFunction(X, settings)
         switch settings.data_inputs
             case 'Motion'
                 paths.files.markers = [settings.base_dir filesep ...
-                    paths.strings.markers '.trc'];
+                    paths.name '.trc'];
                 paths.files.grfs = [settings.base_dir filesep ...
-                    paths.strings.grfs '.txt'];
+                    paths.name '.txt'];
             case 'Markers'
                 paths.files.markers = [settings.base_dir filesep ...
-                    paths.strings.markers '.trc'];
+                    paths.name '.trc'];
             case {'GRF', 'EMG'}
                 paths.files.grfs = [settings.base_dir filesep ...
-                    paths.strings.grfs '.txt'];
+                    paths.name '.txt'];
                 paths.files.emg = [settings.base_dir filesep ...
-                    paths.strings.grfs '.csv'];
+                    paths.name '.csv'];
         end
         
         % Inner-level directories for saving segmentation & OpenSim results.

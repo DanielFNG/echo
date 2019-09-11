@@ -91,17 +91,19 @@ function [cycles, times] = processRawData(...
             trials = createTrials(settings.model_file, markers_folder, ...
                 osim_dir, []);
     end
-    runBatch(settings.opensim_analyses, trials);
+    runBatchParallel(settings.opensim_analyses, trials);
             
     n_samples = length(trials);
 
     % Create gait cycles.
     if ~strcmp(settings.data_inputs, 'EMG')
         cycles = cell(n_samples, 1);
-        for i=1:n_samples
-            motion = MotionData(trials{i}, settings.leg_length, ...
-                settings.toe_length, settings.motion_analyses, ...
-                settings.segmentation_cutoff);
+        leg = settings.leg_length;  % Reduce parfor communication overhead
+        toe = settings.toe_length;
+        analyses = settings.motion_analyses;
+        cutoff = settings.segmentation_cutoff;
+        parfor i=1:n_samples
+            motion = MotionData(trials{i}, leg, toe, analyses, cutoff);
             cycles{i} = GaitCycle(motion);
         end
     else
