@@ -1,4 +1,4 @@
-function combinations = suggestRandomisedParameters(rise, peak, fall)
+function combinations = suggestRandomisedParameters(t, rise, peak, fall)
 % Creates a combination vector and suggests random combinations until all
 % have been explored.
 
@@ -7,9 +7,12 @@ function combinations = suggestRandomisedParameters(rise, peak, fall)
     combinations = combinations(:, randperm(n_combinations));
     
     for i=1:n_combinations
-        fprintf('Apply rise %i, peak %i, fall %i.\n', ...
-            combinations(1, i), combinations(2, i), combinations(3, i));
-        input('Press any key to continue.');
+        if issorted(combinations(:, i)) % Skip unordered combos
+            fprintf('Applying rise %i, peak %i, fall %i.\n', ...
+                combinations(1, i), combinations(2, i), combinations(3, i));
+            sendControlParameters(t, combinations(1, i), combinations(2, i), combinations(3, i));
+            input('Press any key to continue.');
+        end
     end
 
 end
