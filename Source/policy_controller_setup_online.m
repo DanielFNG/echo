@@ -3,12 +3,6 @@
 % Data directory.
 settings.base_dir = 'D:\Vicon Install Nov 2018\Normal\HIL\S0';
 
-% Save file name - where the bayesopt results will be saved.
-settings.save_file = [settings.base_dir filesep 'hil-results.mat'];
-
-% Data inputs - markers only, grfs only, motion (both), emg (emg + grf).
-settings.data_inputs = 'Motion';
-
 % Subject specific settings.
 settings.mass = 81;
 settings.leg_length = 0.93;
@@ -27,6 +21,9 @@ settings.z_offset = 0;
 
 % Operation mode - online or offline.
 settings.operation_mode = 'online';
+
+% Data inputs - markers only, grfs only, motion (both), emg (emg + grf).
+settings.data_inputs = 'Motion';
 
 % Motion metric specific settings.
 settings.metric = {@calculateMetabolicRate};
@@ -67,66 +64,53 @@ settings.min_length = 20;
 % Communication - this should be an active TCPIP server. 
 settings.server = t;
 
+% Save file name - where the bayesopt results will be saved.
+settings.save_file = [settings.base_dir filesep 'hil-results.mat'];
+
 % Data filestructure.
 settings.name = 'capture';
 settings.format = '%03i';  % # of leading 0's in Vicon filenames 
+settings.model_name = 'model.osim';
+settings.adjusted_model_name = 'model_adjusted.osim';
+settings.model_folder = 'Models';
+settings.static_file = 'static.trc';
+settings.initial_walk = 'walk';
+settings.cadence_folder = 'Cadence';
 
 % Bayesian optimisation settings. 
 settings.iter_func = @(x) x;
 settings.max_iterations = 20;
 settings.num_seed_points = 8;  % 8 fully randomised measurements first
 settings.acquisition_function = 'expected-improvement-plus';
-settings.bayesopt_args = {'ExplorationRatio', 0.7};  % stuff like exploration ratio would be here
+settings.bayesopt_args = {'ExplorationRatio', 0.7};  % stuff like exploration 
+                                                     % ratio would be here
 
-%% Run
-
-% Create models directory.
-model_dir = [settings.base_dir filesep 'Models'];
-mkdir(model_dir);
+%% Final set up steps
 
 % OpenSim model created & scaled. 
-input('Ensure the ''static.trc'' file has been created, input any key to continue.\n');
-static = [settings.base_dir filesep 'static.trc'];
-processStaticData(settings.base_dir, static, settings.marker_system);
-model = [model_dir filesep 'model.osim'];
-scaleModel(settings.mass, model, static);
+input(['Ensure the ''static.trc'' file has been created, ' ...
+    'input any key to continue.\n']);
+createScaledModel(settings);
 
 % OpenSim model adjusted.
-input('Ensure the inital walk ''walk.trc'' and ''walk.txt'' files have been created, input any key to continue.\n');
-raw_markers = [settings.base_dir filesep 'walk.trc'];
-raw_grf = [settings.base_dir filesep 'walk.txt'];
-processMotionData(settings.base_dir, settings.base_dir, raw_markers, raw_grf, ...
-    settings.marker_system, settings.grf_system, settings.x_offset, ...
-    settings.y_offset, settings.z_offset, settings.time_delay, ...
-    settings.speed, settings.inclination, [], settings.feet, settings.mode, ...
-    settings.cutoff, 'Markers', 'GRF');
-markers = [settings.base_dir filesep 'right' filesep 'Markers' filesep 'cycle01.trc'];
-grf = [settings.base_dir filesep 'right' filesep 'GRF' filesep 'cycle01.mot'];
-human_model = 'C:\OpenSim 3.3\Models\Gait2392_Simbody\gait2392_simbody.osim';
-settings.model = [model_dir filesep 'model_adjusted.osim'];
-adjustment_folder = [model_dir filesep 'Adjustment'];
-adjustModel(model, settings.model, human_model, markers, grf, adjustment_folder);
-input('Model adjustment completed. Input any key to confirm visual analysis of model and proceed to cadence computation.\n');
+input(['Ensure the inital ''walk.trc'' and ''walk.txt'' files have ' ...
+    'been created, input any key to continue.\n']);
+[settings.model, markers, grf] = createAdjustedModel(settings);
+input(['Model adjustment completed. Input any key to confirm visual ' ...
+    'analysis of model and proceed to cadence computation.\n']);
 
 % Optimal cadence computed.
-cadence_results = [settings.base_dir filesep 'Cadence'];
-trials = createTrials(settings.model, markers, cadence_results, grf);
-n_trials = length(trials);
-cadence_data = zeros(1, n_trials);
-analyses = {'GRF'};
-for i=1:n_trials
-    motion_data = MotionData(trials{i}, settings.leg_length, ...
-        settings.toe_length, analyses, settings.grf_cutoff);
-    cycle = GaitCycle(motion_data);
-    cadence_data(i) = 60/cycle.calculateTotalTime(); % steps/min e.g. bpm for metronome
-end
-cadence = round(mean(cadence_data));
+cadence = computeDesiredCadence(settings, markers, grf);
 fprintf('Cadence calculation completed - set metronome to %i BPM.\n', cadence);
 
 % Reminder about first calorimetry measurement. 
-input('Input any key when first calorimetry walk has been completed. Remember vicon name change.\n');
+input(['Input any key when first calorimetry walk has been completed. ' ...
+    'Remember vicon name change.\n']);
+
+%% Run HIL optimisation
 
 % Run policy controller. 
-input('All setup steps completed - input any key when ready to begin HIL policy controller.\n');
+input(['All setup steps completed - input any key when ready ' ...
+    'to begin HIL policy controller.\n']);
 runPolicyController(settings);
 
