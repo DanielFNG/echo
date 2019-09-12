@@ -1,7 +1,7 @@
 %% The stuff that probably has to change/be looked over between experiments.
 
 % Data directory.
-settings.base_dir = 'D:\Vicon Install Nov 2018\Normal\HIL\S0';
+settings.base_dir = 'D:\Vicon Install Nov 2018\Normal\Metabolics\Test HIL Metabolics';
 
 % Subject specific settings.
 settings.mass = 81;
@@ -26,8 +26,8 @@ settings.operation_mode = 'online';
 settings.data_inputs = 'Motion';
 
 % Motion metric specific settings.
-settings.metric = {@calculateMetabolicRate};
-settings.args = [];
+settings.metric = @calculateMetabolicRate;
+settings.args = {};
 settings.opensim_analyses = {'IK', 'SO'};
 settings.motion_analyses = {'SO'};
 
@@ -40,8 +40,8 @@ settings.inclination = 0;
 
 % Data processing specific settings.
 settings.feet = {'right'};
-settings.segmentation_mode = 'stance';
-settings.segmentation_cutoff = 2;
+settings.seg_mode = 'stance';
+settings.seg_cutoff = 2;
 settings.time_delay = 0;
 settings.marker_system.forward = '+z';
 settings.marker_system.up = '+y';
@@ -73,6 +73,7 @@ settings.format = '%03i';  % # of leading 0's in Vicon filenames
 settings.model_name = 'model.osim';
 settings.adjusted_model_name = 'model_adjusted.osim';
 settings.model_folder = 'Models';
+settings.static_folder = 'Static';
 settings.static_file = 'static.trc';
 settings.initial_walk = 'walk';
 settings.cadence_folder = 'Cadence';

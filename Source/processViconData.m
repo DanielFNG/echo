@@ -17,7 +17,6 @@ function processViconData(trial)
 
     vicon.RunPipeline('Export GRF Full Frames Only', '', timeout);
     vicon.RunPipeline('Export TRC Full Frames Only', '', timeout);
-    vicon.RunPipeline('');
     vicon.SaveTrial(timeout);
     
     moveAndClick(70, 50);

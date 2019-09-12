@@ -46,10 +46,10 @@ function result = generalObjectiveFunction(X, settings)
         case 'online'
 
             % Apply APO torque pattern.
-            sendControlParameters(settings.server, rise, peak, fall);
-%             fprintf('\nApply rise %i, peak %i, fall %i.\n', rise, peak, fall);
-            beep;
-%             input('Press any key to continue.');
+            %sendControlParameters(settings.server, rise, peak, fall);
+             fprintf('\nApply rise %i, peak %i, fall %i.\n', rise, peak, fall);
+            %beep;
+             input('Press any key to continue.');
 
             % Construct filenames & create directories.
             paths = constructPaths(settings, G__iteration);

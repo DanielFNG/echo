@@ -12,7 +12,7 @@ function cadence = computeDesiredCadence(settings, markers, grfs)
     % Compute BPM for each trial. 
     for i=1:n_trials
         motion_data = MotionData(trials{i}, settings.leg_length, ...
-            settings.toe_length, analyses, settings.grf_cutoff);
+            settings.toe_length, analyses, settings.seg_cutoff);
         cycle = GaitCycle(motion_data);
         cadence_data(i) = 60/cycle.calculateTotalTime(); % steps/min e.g. bpm
     end
