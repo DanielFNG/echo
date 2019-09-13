@@ -7,16 +7,16 @@ function cadence = computeDesiredCadence(settings, markers, grfs)
     results = [settings.base_dir filesep settings.cadence_folder];
     trials = createTrials(settings.model, markers, results, grfs);
     n_trials = length(trials);
-    cadence_data = zeros(1, n_trials);
+    cycles = cell(1, n_trials);
     
     % Compute BPM for each trial. 
     for i=1:n_trials
         motion_data = MotionData(trials{i}, settings.leg_length, ...
             settings.toe_length, analyses, settings.seg_cutoff);
-        cycle = GaitCycle(motion_data);
-        cadence_data(i) = 60/cycle.calculateTotalTime(); % steps/min e.g. bpm
+        cycles{i} = GaitCycle(motion_data);
     end
     
     % Result - take mean and round.
-    cadence = round(mean(cadence_data));
+    [time, ~] = computeMeanMetric(cycles, @calculateTotalTime);
+    cadence = round(60/time);
 end
