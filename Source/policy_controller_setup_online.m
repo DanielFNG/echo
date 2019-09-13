@@ -29,6 +29,9 @@ settings.data_inputs = 'Motion';
 settings.metric = @calculateMetabolicRate;
 settings.args = {};
 settings.opensim_analyses = {'IK', 'SO'};
+load_file = ...
+    [getenv('OPENSIM_MATLAB_HOME') filesep 'Defaults' filesep 'apo.xml'];
+settings.opensim_args = {'load', load_file};  % APO force model
 settings.motion_analyses = {'SO'};
 
 % Baseline mode - none, absolute or relative.
@@ -94,8 +97,8 @@ input(['Ensure the ''static.trc'' file has been created, ' ...
 createScaledModel(settings);
 
 % OpenSim model adjusted.
-input(['Ensure the inital ''walk.trc'' and ''walk.txt'' files have ' ...
-    'been created, input any key to continue.\n']);
+input(['Ensure the inital unassisted ''walk.trc'' and ''walk.txt'' files ' ...
+    'have been created, input any key to continue.\n']);
 [settings.model, markers, grf] = createAdjustedModel(settings);
 input(['Model adjustment completed. Input any key to confirm visual ' ...
     'analysis of model and proceed to cadence computation.\n']);
@@ -107,6 +110,13 @@ fprintf('Cadence calculation completed - set metronome to %i BPM.\n', cadence);
 % Reminder about first calorimetry measurement. 
 input(['Input any key when first calorimetry walk has been completed. ' ...
     'Remember vicon name change.\n']);
+
+% Start parallel pool - if one isn't already created.
+try
+    parpool
+catch
+    fprintf('Parpool already active.\n');
+end
 
 %% Run HIL optimisation
 

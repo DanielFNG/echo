@@ -91,7 +91,8 @@ function [cycles, times] = processRawData(...
             trials = createTrials(settings.model, markers_folder, ...
                 osim_dir, []);
     end
-    runBatchParallel(settings.opensim_analyses, trials);
+    trials = runBatchParallel(...
+        settings.opensim_analyses, trials, settings.opensim_args{:});
             
     n_samples = length(trials);
 
