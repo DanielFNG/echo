@@ -34,12 +34,12 @@ function [cycles, times] = processRawData(...
             [path, name, ~] = fileparts(markers);
             trial_name = [path filesep name];
             waitUntilWritable([trial_name '.x2d'], 2);
-            processViconData(trial_name);
+            processViconData(trial_name, settings);
         else
             [path, name, ~] = fileparts(grfs);
             trial_name = [path filesep name];
             waitUntilWritable([trial_name '.x2d'], 2);
-            processViconEMG(trial_name);
+            processViconEMG(trial_name, settings);
         end
     end
 

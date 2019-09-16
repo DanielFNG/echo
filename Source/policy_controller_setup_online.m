@@ -91,14 +91,21 @@ settings.bayesopt_args = {'ExplorationRatio', 0.7};  % stuff like exploration
 
 %% Final set up steps
 
+% Start parallel pool - if one isn't already created.
+try
+    parpool
+catch
+    fprintf('Parpool already active.\n');
+end
+
 % OpenSim model created & scaled. 
-input(['Ensure the ''static.trc'' file has been created, ' ...
+input(['Ensure the ''' settings.static_file ''' file has been created, ' ...
     'input any key to continue.\n']);
 createScaledModel(settings);
 
 % OpenSim model adjusted.
-input(['Ensure the inital unassisted ''walk.trc'' and ''walk.txt'' files ' ...
-    'have been created, input any key to continue.\n']);
+input(['Ensure the inital unassisted ''' settings.initial_walk ''' data has '...
+    'been collected, input any key to continue.\n']);
 [settings.model, markers, grf] = createAdjustedModel(settings);
 input(['Model adjustment completed. Input any key to confirm visual ' ...
     'analysis of model and proceed to cadence computation.\n']);
@@ -111,17 +118,15 @@ fprintf('Cadence calculation completed - set metronome to %i BPM.\n', cadence);
 input(['Input any key when first calorimetry walk has been completed. ' ...
     'Remember vicon name change.\n']);
 
-% Start parallel pool - if one isn't already created.
-try
-    parpool
-catch
-    fprintf('Parpool already active.\n');
-end
+% Calibrate the Vicon click arguments.
+settings = calibrateViconClickCoordinates(settings);
 
 %% Run HIL optimisation
 
 % Run policy controller. 
 input(['All setup steps completed - input any key when ready ' ...
-    'to begin HIL policy controller.\n']);
+    'to begin HIL policy controller.\nENSURE THAT THE VICON WINDOW IS IN' ...
+    ' FULL SCREEN MODE ON THE WIDE MONITOR AND THE MOUSE IS POSITIONED ' ...
+    'ON THIS WINDOW BEFORE PRESSING ENTER.\n']);
 runPolicyController(settings);
 

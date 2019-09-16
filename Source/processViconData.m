@@ -1,4 +1,4 @@
-function processViconData(trial)
+function processViconData(trial, settings)
 
     timeout = 30;
 
@@ -19,10 +19,10 @@ function processViconData(trial)
     vicon.RunPipeline('Export TRC Full Frames Only', '', timeout);
     vicon.SaveTrial(timeout);
     
-    moveAndClick(70, 50);
+    moveAndClick(settings.live_x, settings.live_y);
     pause(2);
-    moveAndClick(1220, 260);
-    moveAndClick(1245, 260);
+    moveAndClick(settings.arm_x, settings.arm_y);
+    moveAndClick(settings.lock_x, settings.lock_y);
 
 end
 

@@ -1,4 +1,4 @@
-function processViconEMG(trial)
+function processViconEMG(trial, settings)
 
     timeout = 30;
 
@@ -11,9 +11,9 @@ function processViconEMG(trial)
     vicon.RunPipeline('Export GRF', '', timeout);
     vicon.SaveTrial(timeout);
     
-    moveAndClick(70, 50);
+    moveAndClick(settings.live_x, settings.live_y);
     pause(2);
-    moveAndClick(1220, 260);
-    moveAndClick(1245, 260);
+    moveAndClick(settings.arm_x, settings.arm_y);
+    moveAndClick(settings.lock_x, settings.lock_y);
 
 end
