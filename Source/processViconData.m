@@ -4,7 +4,7 @@ function processViconData(trial, settings)
 
     vicon = ViconNexus();
     
-    pause(1);
+    pause(0.1);
     vicon.OpenTrial(trial, 30);
 
     vicon.RunPipeline('Reconstruct And Label', '', timeout);
@@ -20,7 +20,7 @@ function processViconData(trial, settings)
     vicon.SaveTrial(timeout);
     
     moveAndClick(settings.live_x, settings.live_y);
-    pause(2);
+    pause(1);
     moveAndClick(settings.arm_x, settings.arm_y);
     moveAndClick(settings.lock_x, settings.lock_y);
 
