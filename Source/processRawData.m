@@ -57,23 +57,14 @@ function [cycles, times] = processRawData(...
     % Process the data, fixing any gaps at the start/end of trials.
     try
         times = process(markers, grfs, save_dir, settings, assistance_params);
-    catch err
-        if strcmp(err.identifier, 'Data:Gaps')
-
-            % Remove problematic frames from data.
-            removeMissingFrames(markers, grfs);
-            
-            % Retry processing the gait data.
+    catch
+        % Try one more time incase it wasn't fully printed.
+        try
             process(markers, grfs, save_dir, settings, assistance_params);
-        else
-            % Try one more time incase it wasn't fully printed.
-            try 
-                process(markers, grfs, save_dir, settings, assistance_params);
-            catch err 
-                fprintf('No current fix for detected error.\n');
-                beep;
-                rethrow(err);
-            end
+        catch err
+            fprintf('No current fix for detected error.\n');
+            beep;
+            rethrow(err);
         end
     end
 
