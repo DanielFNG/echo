@@ -11,7 +11,7 @@ function [new_model, markers, grfs] = createAdjustedModel(settings)
     adjustment = 'Adjustment';
     
     % Process the vicon data.
-    processViconData(settings.initial_walk);
+    processViconData([settings.base_dir filesep settings.initial_walk], settings);
 
     % Process the raw marker and grf data.
     raw_markers = [settings.base_dir filesep settings.initial_walk marker_ext];

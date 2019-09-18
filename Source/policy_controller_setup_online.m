@@ -1,7 +1,7 @@
 %% The stuff that probably has to change/be looked over between experiments.
 
 % Data directory.
-settings.base_dir = 'D:\Vicon Install Nov 2018\Normal\Metabolics\Test HIL Metabolics';
+settings.base_dir = 'D:\Vicon Install Nov 2018\Normal\Metabolics\S0';
 
 % Subject specific settings.
 settings.mass = 81;
@@ -98,6 +98,9 @@ catch
     fprintf('Parpool already active.\n');
 end
 
+% Calibrate the Vicon click arguments.
+settings = calibrateViconClickCoordinates(settings);
+
 % OpenSim model created & scaled. 
 input(['Ensure the ''' settings.static_file ''' file has been created, ' ...
     'input any key to continue.\n']);
@@ -117,9 +120,6 @@ fprintf('Cadence calculation completed - set metronome to %i BPM.\n', cadence);
 % Reminder about first calorimetry measurement. 
 input(['Input any key when first calorimetry walk has been completed. ' ...
     'Remember vicon name change.\n']);
-
-% Calibrate the Vicon click arguments.
-settings = calibrateViconClickCoordinates(settings);
 
 %% Run HIL optimisation
 
