@@ -4,12 +4,8 @@ function processViconData(trial, settings)
 
     vicon = ViconNexus();
     
-    try
-        vicon.OpenTrial(trial, timeout);
-    catch
-        pause(0.5);
-        vicon.OpenTrial(trial, timeout);
-    end
+    pause(0.1);
+    vicon.OpenTrial(trial, 30);
 
     vicon.RunPipeline('Reconstruct And Label', '', timeout);
 

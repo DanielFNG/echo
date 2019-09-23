@@ -7,6 +7,7 @@ function [new_model, markers, grfs] = createAdjustedModel(settings)
     marker_folder = 'Markers';
     grf_folder = 'GRF';
     human_model = 'C:\OpenSim 3.3\Models\Gait2392_Simbody\gait2392_simbody.osim';
+    baseline = 'cycle01';
     adjustment = 'Adjustment';
     
     % Process the vicon data.
@@ -26,10 +27,8 @@ function [new_model, markers, grfs] = createAdjustedModel(settings)
     markers = [settings.base_dir filesep settings.feet{1} filesep ...
         marker_folder];
     grfs = [settings.base_dir filesep settings.feet{1} filesep grf_folder];
-    [~, marker_files] = getFilePaths(markers, marker_ext);
-    [~, grf_files] = getFilePaths(grfs, p_grf_ext);
-    marker = marker_files{1};
-    grf = grf_files{1};
+    marker = [markers filesep baseline marker_ext];
+    grf = [grfs filesep baseline p_grf_ext];
     model_dir = [settings.base_dir filesep settings.model_folder];
     model = [model_dir filesep settings.model_name];
     new_model = [model_dir filesep settings.adjusted_model_name];
