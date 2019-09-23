@@ -62,8 +62,6 @@ function [cycles, times] = processRawData(...
         try
             process(markers, grfs, save_dir, settings, assistance_params);
         catch err
-            fprintf('No current fix for detected error.\n');
-            beep;
             rethrow(err);
         end
     end

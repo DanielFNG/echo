@@ -48,7 +48,6 @@ function result = generalObjectiveFunction(X, settings)
             % Apply APO torque pattern.
             sendControlParameters(settings.server, rise, peak, fall);
             %fprintf('\nApply rise %i, peak %i, fall %i.\n', rise, peak, fall);
-            %beep;
             %input('Press any key to continue.');
 
             % Construct filenames & create directories.
