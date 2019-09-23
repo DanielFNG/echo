@@ -4,6 +4,7 @@
 settings.base_dir = 'D:\Vicon Install Nov 2018\Normal\Metabolics\S1';
 
 % Subject specific settings.
+settings.subject_id = 1;
 settings.mass = 62;
 settings.leg_length = 0.84;
 settings.toe_length = 0.08;
@@ -76,8 +77,8 @@ settings.format = '%03i';  % # of leading 0's in Vicon filenames
 settings.model_name = 'model.osim';
 settings.adjusted_model_name = 'model_adjusted.osim';
 settings.model_folder = 'Models';
+settings.static_file = ['S' num2str(settings.subject_id) ' Cal 01.trc'];
 settings.static_folder = 'Static';
-settings.static_file = 'static.trc';
 settings.initial_walk = 'walk';
 settings.cadence_folder = 'Cadence';
 
