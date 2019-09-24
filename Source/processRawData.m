@@ -85,7 +85,7 @@ function [cycles, times] = processRawData(...
     end
     
     % Temporary measure to restrict ourselves to <= 4 trials.
-    if length(trials) > 2
+    if length(trials) > 4
         trials = trials(end - 1:end);
     end
     
