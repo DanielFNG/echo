@@ -80,6 +80,12 @@ function [cycles, times] = processRawData(...
             trials = createTrials(settings.model, markers_folder, ...
                 osim_dir, []);
     end
+    
+    % Temporary measure to restrict ourselves to <= 4 trials.
+    if length(trials) > 2
+        trials = trials(end - 1:end);
+    end
+    
     trials = runBatchParallel(...
         settings.opensim_analyses, trials, settings.opensim_args{:});
             

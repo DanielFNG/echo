@@ -61,11 +61,6 @@ function result = generalObjectiveFunction(X, settings)
             [cycles, times] = processRawData(paths.files.markers, ...
                 paths.files.grfs, paths.directories.segmented_inner, ...
                 paths.directories.opensim_inner, settings, params);
-            
-            %% Temporary mesure to restrict ourselves to < 4 gait cycles.
-            if length(cycles) > 4
-                cycles = cycles(end - 3:end);
-            end
 
         case 'offline'
 

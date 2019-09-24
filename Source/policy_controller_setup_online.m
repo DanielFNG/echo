@@ -1,17 +1,17 @@
 %% The stuff that probably has to change/be looked over between experiments.
 
 % Data directory.
-settings.base_dir = 'D:\Vicon Install Nov 2018\Normal\Metabolics\S1';
+settings.base_dir = 'D:\Vicon Install Nov 2018\Normal\Metabolics\S2';
 
 % Subject specific settings.
-settings.subject_id = 1;
-settings.mass = 62;
-settings.leg_length = 0.84;
-settings.toe_length = 0.08;
-settings.speed = 1.08;
+settings.subject_id = 2;
+settings.mass = 73.5;
+settings.leg_length = 0.92;
+settings.toe_length = 0.065;
+settings.speed = 1.14;
 
 % Assistance magnitude. 
-settings.force = 6.2;
+settings.force = 8.82;
 
 % Co-ordinate system offsets - calculate these using motion function.
 settings.x_offset = 0;
