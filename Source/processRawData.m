@@ -33,12 +33,15 @@ function [cycles, times] = processRawData(...
             % Wait until raw vicon data is available.
             [path, name, ~] = fileparts(markers);
             trial_name = [path filesep name];
-            waitUntilWritable([trial_name '.x2d'], 2);
+            waitUntilWritable([trial_name '.x2d'], 0.5);
+            pause(5); % 5 second pause to give extra 5s of assistance - so as 
+                      % not to confuse subject with audio feedback while 
+                      % still recording
             processViconData(trial_name, settings);
         else
             [path, name, ~] = fileparts(grfs);
             trial_name = [path filesep name];
-            waitUntilWritable([trial_name '.x2d'], 2);
+            waitUntilWritable([trial_name '.x2d'], 0.5);
             processViconEMG(trial_name, settings);
         end
     end
