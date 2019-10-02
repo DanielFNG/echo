@@ -10,6 +10,11 @@ function text_data = parseMetabolicData(filename, frame)
     
     % Get the labels.
     labels = strsplit(fgetl(id), '\t');
+    
+    
+    if isempty(labels{end})
+        labels(end) = [];
+    end
     n_cols = length(labels);
     
     % Disregard the next line.
@@ -23,11 +28,11 @@ function text_data = parseMetabolicData(filename, frame)
         
         split = strsplit(str, ':');
         
-        if length(split) ~= 3
-            error('Hard coded to more than an hour this time - this is incase this doesn''t hold in future.');
+        if length(split) ~= 2
+            error('Hard coded to less than an hour this time - this is incase this doesn''t hold in future.');
         end
        
-        time_in_seconds = str2double(split{1}) * 3600 + str2double(split{2}) * 60 + str2double(split{3});
+        time_in_seconds = str2double(split{1}) * 60 + str2double(split{2});
         
     end
     
