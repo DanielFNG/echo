@@ -57,9 +57,9 @@ settings.grf_system.right = '+x';
 % Valid ranges for the control parameters. NOTE: if
 % multiplier*min_rise_range is less than 10, we will have problems with the
 % TCP-IP solution. 
-settings.rise_range = [30, 75];
-settings.peak_range = [40, 90];
-settings.fall_range = [50, 99];
+settings.rise_range = [25, 45];
+settings.peak_range = [40, 80];
+settings.fall_range = [70, 95];
 
 % Control parameter variables.
 settings.multiplier = 1;
