@@ -13,6 +13,6 @@ mkdir(model_dir);
 % Scale model.
 static = [results filesep settings.static_file];
 model = [model_dir filesep settings.model_name];
-scaleModel(settings.mass, model, static);
+scaleModel(settings.combined_mass, model, static);
 
 end

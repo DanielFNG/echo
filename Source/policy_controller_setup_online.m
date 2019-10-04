@@ -6,6 +6,7 @@ settings.base_dir = 'D:\Vicon Install Nov 2018\Normal\Metabolics\S2';
 % Subject specific settings.
 settings.subject_id = 2;
 settings.mass = 73.5;
+settings.combined_mass = 0;
 settings.leg_length = 0.92;
 settings.toe_length = 0.065;
 settings.speed = 1.14;

@@ -85,8 +85,8 @@ function [cycles, times] = processRawData(...
     end
     
     % Temporary measure to restrict ourselves to <= 4 trials.
-    if length(trials) > 4
-        trials = trials(end - 1:end);
+    if length(trials) > 3
+        trials = trials(end - 2:end);
     end
     
     trials = runBatchParallel(...
