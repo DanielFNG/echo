@@ -1,7 +1,7 @@
 %% The stuff that probably has to change/be looked over between experiments.
 
-% Data directory.
-settings.base_dir = 'D:\Vicon Install Nov 2018\Normal\Metabolics\S2';
+% Root directory (may change between PC's)
+settings.root_dir = 'D:\Vicon Install Nov 2018\Normal\Metabolics';
 
 % Subject specific settings.
 settings.subject_id = 2;
@@ -20,6 +20,11 @@ settings.y_offset = 0;
 settings.z_offset = 0;  
 
 %% The stuff that probably doesn't have to change/be looked over.
+
+% Data directory
+seettings.subject_prefix = 'S';
+settings.base_dir = [root_dir filesep settings.subject_prefix ...
+    num2str(settings.subject_id)];
 
 % Operation mode - online or offline.
 settings.operation_mode = 'online';
