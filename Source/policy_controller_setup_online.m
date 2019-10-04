@@ -1,18 +1,14 @@
 %% The stuff that probably has to change/be looked over between experiments.
 
 % Root directory (may change between PC's)
-settings.root_dir = 'D:\Vicon Install Nov 2018\Normal\Metabolics';
+settings.root_dir = 'D:\Dropbox\PhD\HIL Control';
 
 % Subject specific settings.
-settings.subject_id = 2;
-settings.mass = 73.5;
-settings.combined_mass = 0;
+settings.subject_id = 5;
+settings.mass = 95.8;
+settings.combined_mass = 102.4;
 settings.leg_length = 0.92;
 settings.toe_length = 0.065;
-settings.speed = 1.14;
-
-% Assistance magnitude. 
-settings.force = 8.82;
 
 % Co-ordinate system offsets - calculate these using motion function.
 settings.x_offset = 0;
@@ -21,9 +17,13 @@ settings.z_offset = 0;
 
 %% The stuff that probably doesn't have to change/be looked over.
 
+% Subject-related experiment parameter calculations
+settings.speed = 1.2*sqrt(0.1*9.81*settings.leg_length);
+settings.force = 0.12*settings.mass;
+
 % Data directory
-seettings.subject_prefix = 'S';
-settings.base_dir = [root_dir filesep settings.subject_prefix ...
+settings.subject_prefix = 'S';
+settings.base_dir = [settings.root_dir filesep settings.subject_prefix ...
     num2str(settings.subject_id)];
 
 % Operation mode - online or offline.
