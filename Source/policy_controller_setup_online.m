@@ -19,7 +19,7 @@ settings.z_offset = 0;
 
 % Subject-related experiment parameter calculations
 settings.speed = 1.2*sqrt(0.1*9.81*settings.leg_length);
-settings.force = 0.12*settings.mass;
+settings.force = 0.15*settings.mass;
 
 % Data directory
 settings.subject_prefix = 'S';
@@ -64,12 +64,15 @@ settings.grf_system.right = '+x';
 % multiplier*min_rise_range is less than 10, we will have problems with the
 % TCP-IP solution. 
 settings.rise_range = [25, 45];
-settings.peak_range = [40, 80];
+settings.pflex_range = [50, 80];
 settings.fall_range = [70, 95];
+settings.pext_range = [5, 25];
 
 % Control parameter variables.
-settings.multiplier = 1;
-settings.min_length = 20;
+%settings.parameter_constraints = @(x) (parameterConstraints(x, settings.multiplier, settings.min_length));
+%settings.multiplier = 1;
+%settings.min_length = 20;
+settings.parameter_constraints = @bimodalParameterConstraints;
 
 % Communication - this should be an active TCPIP server. 
 settings.server = t;
