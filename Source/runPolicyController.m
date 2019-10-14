@@ -71,11 +71,13 @@ end
 % Create required function handles.
 objective_function = @(X) (generalObjectiveFunction(X, settings));
 
-% Construct optimisation variables. 
+% Construct optimisation variables.
+pext = optimizableVariable('pext', settings.pext_range, 'Type', 'integer');
 rise = optimizableVariable('rise', settings.rise_range, 'Type', 'integer');
-peak = optimizableVariable('peak', settings.peak_range, 'Type', 'integer');
+pflex = ...
+    optimizableVariable('pflex', settings.pflex_range, 'Type', 'integer');
 fall = optimizableVariable('fall', settings.fall_range, 'Type', 'integer');
-optimisation_variables = [rise, peak, fall];
+optimisation_variables = [pext, rise, pflex, fall];
 
 % Initialise Bayesian optimisation with a single step, & save result.
 global G__iteration;

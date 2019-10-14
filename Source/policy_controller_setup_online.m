@@ -62,11 +62,11 @@ settings.grf_system.right = '+x';
 
 % Valid ranges for the control parameters. NOTE: if
 % multiplier*min_rise_range is less than 10, we will have problems with the
-% TCP-IP solution. 
+% TCP-IP solution.
+settings.pext_range = [5, 25];
 settings.rise_range = [25, 45];
 settings.pflex_range = [50, 80];
 settings.fall_range = [70, 95];
-settings.pext_range = [5, 25];
 
 % Control parameter variables.
 %settings.parameter_constraints = @(x) (parameterConstraints(x, settings.multiplier, settings.min_length));
@@ -93,10 +93,10 @@ settings.cadence_folder = 'Cadence';
 
 % Bayesian optimisation settings. 
 settings.iter_func = @(x) x;
-settings.max_iterations = 20;
-settings.num_seed_points = 8;  % 8 fully randomised measurements first
+settings.max_iterations = 30;
+settings.num_seed_points = 12;  % fully randomised measurements first
 settings.acquisition_function = 'expected-improvement-plus';
-settings.bayesopt_args = {'ExplorationRatio', 0.7};  % stuff like exploration 
+settings.bayesopt_args = {'ExplorationRatio', 0.5};  % stuff like exploration 
                                                      % ratio would be here
 
 %% Final set up steps

@@ -37,8 +37,9 @@ function result = generalObjectiveFunction(X, settings)
     end
 
     % Convert control parameters.
+    pext = settings.multiplier*X.pext;
     rise = settings.multiplier*X.rise;
-    peak = settings.multiplier*X.peak;
+    pflex = settings.multiplier*X.pflex;
     fall = settings.multiplier*X.fall;
 
     switch settings.operation_mode
@@ -46,8 +47,8 @@ function result = generalObjectiveFunction(X, settings)
         case 'online'
 
             % Apply APO torque pattern.
-            sendControlParameters(settings.server, rise, peak, fall);
-            %fprintf('\nApply rise %i, peak %i, fall %i.\n', rise, peak, fall);
+            sendControlParameters(settings.server, pext, rise, pflex, fall);
+            %fprintf('\nApply pext %i, rise %i, pflex %i, fall %i.\n', pext, rise, pflex, fall);
             %input('Press any key to continue.');
 
             % Construct filenames & create directories.
@@ -55,7 +56,7 @@ function result = generalObjectiveFunction(X, settings)
             
             % Construct assistance parameters.
             params = constructAssistanceParams(...
-                settings.force, rise, peak, fall);
+                settings.force, pext, rise, pflex, fall);
 
             % Obtain gait cycles from raw data processing.
             [cycles, times] = processRawData(paths.files.markers, ...

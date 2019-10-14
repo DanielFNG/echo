@@ -1,10 +1,9 @@
-function sendControlParameters(server, rise, peak, fall)
+function sendControlParameters(server, pext, rise, pflex, fall)
 
-    % Handle different sets of inputs (e.g. rise < 10, etc).
+    % This doesn't handle inputs of size 3 e.g. 100.
 
     % Construct the array of data to send.
-    %array = [rise, peak, fall];
-    array = [num2str(rise), num2str(peak), num2str(fall)];
+    array = sprintf('%02i', pext, rise, pflex, fall);
     fwrite(server, array, 'uchar');
 
 end
