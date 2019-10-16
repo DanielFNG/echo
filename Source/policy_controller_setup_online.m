@@ -70,8 +70,8 @@ settings.fall_range = [70, 95];
 
 % Control parameter variables.
 %settings.parameter_constraints = @(x) (parameterConstraints(x, settings.multiplier, settings.min_length));
-%settings.multiplier = 1;
 %settings.min_length = 20;
+settings.multiplier = 1;
 settings.parameter_constraints = @bimodalParameterConstraints;
 
 % Communication - this should be an active TCPIP server. 
