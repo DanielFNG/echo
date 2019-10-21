@@ -1,4 +1,4 @@
-function settings = calibrateViconClickCoordinates(settings)
+function settings = calibrateViconClickCoordinates()
 
     input(['Position your mouse at the VERY top of the Vicon screen, ' ...
         'then press enter.']);

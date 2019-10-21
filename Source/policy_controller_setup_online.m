@@ -108,6 +108,9 @@ catch
     fprintf('Parpool already active.\n');
 end
 
+% Open connection to Vicon Server
+settings.vicon_server = 
+
 % Calibrate the Vicon click arguments.
 settings = calibrateViconClickCoordinates(settings);
 

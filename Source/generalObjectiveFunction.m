@@ -47,7 +47,8 @@ function result = generalObjectiveFunction(X, settings)
         case 'online'
 
             % Apply APO torque pattern.
-            sendControlParameters(settings.server, pext, rise, pflex, fall);
+            sendControlParameters(settings.vicon_server, ...
+                pext, rise, pflex, fall);
             %fprintf('\nApply pext %i, rise %i, pflex %i, fall %i.\n', pext, rise, pflex, fall);
             %input('Press any key to continue.');
 

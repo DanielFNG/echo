@@ -23,10 +23,8 @@ function processViconData(trial, settings)
     vicon.RunPipeline('Export TRC Full Frames Only', '', timeout);
     vicon.SaveTrial(timeout);
     
-    moveAndClick(settings.live_x, settings.live_y);
-    pause(1);
-    moveAndClick(settings.arm_x, settings.arm_y);
-    moveAndClick(settings.lock_x, settings.lock_y);
+    % Tell the Vicon PC to go live again.
+    fwrite(settings.vicon_server, '0', 'uchar');
 
 end
 
