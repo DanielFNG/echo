@@ -8,7 +8,7 @@ while true
             
             case 1
                 fread(settings.vicon_server, ...
-                    settings.vicon_server.BytesAvailable)
+                    settings.vicon_server.BytesAvailable);
                 goLive(settings);
             case 8
                 string = char(fread(settings.vicon_server, ...

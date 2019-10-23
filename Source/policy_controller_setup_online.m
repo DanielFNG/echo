@@ -1,12 +1,12 @@
 %% The stuff that probably has to change/be looked over between experiments.
 
 % Root directory (may change between PC's)
-settings.root_dir = 'D:\Dropbox\PhD\HIL Control';
+settings.root_dir = 'N:\Shared_Data\HIL\Bimodal_test';
 
 % Subject specific settings.
-settings.subject_id = 5;
-settings.mass = 95.8;
-settings.combined_mass = 102.4;
+settings.subject_id = 4;
+settings.mass = 80;
+settings.combined_mass = 90;
 settings.leg_length = 0.92;
 settings.toe_length = 0.065;
 
@@ -111,7 +111,7 @@ input(['Execute the runViconPC script on the Vicon PC.\n'...
     'Input any key when prompted by the Vicon PC.\n']);
 
 % Connect to the Vicon PC.
-settings.server = connectToViconServer();
+settings.vicon_server = connectToViconServer();
 
 % OpenSim model created & scaled. 
 input(['Ensure the ''' settings.static_file ''' file has been created.\n' ...
