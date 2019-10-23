@@ -7,10 +7,10 @@ function t = createTCPIPserver()
     % controller. 
 
     % Open a TCP/IP server & wait for connection.
-    disp('Opening server connection. Please start the APO control software now.')
+    fprintf(['Opening server connection. Please start the APO control software now. '...
+        'You may need to start, stop then restart APO software.\n']);
     t = tcpip('0.0.0.0', 10003, 'NetworkRole', 'server');
-    t.InputBufferSize = 6; % 2 digits from each control parameter
     fopen(t);
-    disp('Connected to APO.')
+    fprintf('Connected to APO.\n')
     
 end

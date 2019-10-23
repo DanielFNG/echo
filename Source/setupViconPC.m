@@ -4,7 +4,7 @@ function settings = setupViconPC()
     settings = calibrateViconClickCoordinates();
     
     % Create the APO server.
-    settings.apo_server = createTCPIserver();
+    settings.apo_server = createTCPIPserver();
     
     % Create the Vicon server. 
     settings.vicon_server = createViconServer();

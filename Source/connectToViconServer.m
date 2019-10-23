@@ -5,8 +5,7 @@ function t = connectToViconServer()
 
     % Create TCP/IP client - prompt user to create server for listening.
     t = tcpip('192.168.10.3', 3091, 'NetworkRole', 'client');
-    input('Press enter after running ''createViconServer'' on Vicon PC.');
     fopen(t);
-    disp('Connected to Vicon server.');
+    fprintf('Connected to Vicon server.\n');
     
 end

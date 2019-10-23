@@ -69,13 +69,11 @@ settings.pflex_range = [50, 80];
 settings.fall_range = [70, 95];
 
 % Control parameter variables.
-%settings.parameter_constraints = @(x) (parameterConstraints(x, settings.multiplier, settings.min_length));
+%settings.parameter_constraints = @(x) (parameterConstraints(x, ...
+%settings.multiplier, settings.min_length));
 %settings.min_length = 20;
 settings.multiplier = 1;
 settings.parameter_constraints = @bimodalParameterConstraints;
-
-% Communication - this should be an active TCPIP server. 
-settings.server = t;
 
 % Save file name - where the bayesopt results will be saved.
 settings.save_file = [settings.base_dir filesep 'hil-results.mat'];
@@ -93,7 +91,7 @@ settings.cadence_folder = 'Cadence';
 
 % Bayesian optimisation settings. 
 settings.iter_func = @(x) x;
-settings.max_iterations = 30;
+settings.max_iterations = 24;
 settings.num_seed_points = 12;  % fully randomised measurements first
 settings.acquisition_function = 'expected-improvement-plus';
 settings.bayesopt_args = {'ExplorationRatio', 0.5};  % stuff like exploration 
@@ -108,15 +106,16 @@ catch
     fprintf('Parpool already active.\n');
 end
 
-% Open connection to Vicon Server
-settings.vicon_server = 
+% Instruct operator to begin setting up the Vicon PC.
+input(['Execute the runViconPC script on the Vicon PC.\n'...
+    'Input any key when prompted by the Vicon PC.\n']);
 
-% Calibrate the Vicon click arguments.
-settings = calibrateViconClickCoordinates(settings);
+% Connect to the Vicon PC.
+settings.server = connectToViconServer();
 
 % OpenSim model created & scaled. 
-input(['Ensure the ''' settings.static_file ''' file has been created, ' ...
-    'input any key to continue.\n']);
+input(['Ensure the ''' settings.static_file ''' file has been created.\n' ...
+    'Input any key to continue.\n']);
 createScaledModel(settings);
 
 % OpenSim model adjusted.
@@ -130,16 +129,13 @@ input(['Model adjustment completed. Input any key to confirm visual ' ...
 cadence = computeDesiredCadence(settings, markers, grf);
 fprintf('Cadence calculation completed - set metronome to %i BPM.\n', cadence);
 
-% Reminder about first calorimetry measurement. 
-input(['Input any key when first calorimetry walk has been completed. ' ...
-    'Remember vicon name change.\n']);
-
 %% Run HIL optimisation
 
 % Run policy controller. 
-input(['All setup steps completed - input any key when ready ' ...
-    'to begin HIL policy controller.\nENSURE THAT THE VICON WINDOW IS IN' ...
-    ' FULL SCREEN MODE ON THE WIDE MONITOR AND THE MOUSE IS POSITIONED ' ...
-    'ON THIS WINDOW BEFORE PRESSING ENTER.\n']);
+input(['On the Vicon PC, change the trial name to ' ...
+    sprintf(['%s' settings.format], settings.name, 1) '. Ensure that the '...
+    'Vicon window\nis in full screen mode on the '...
+    'wide monitor, and is live, armed and locked.\nAll setup steps '...
+    'completed - input any key when ready to begin HIL policy controller.']);
 runPolicyController(settings);
 
