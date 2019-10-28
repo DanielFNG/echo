@@ -17,7 +17,7 @@ function y = generateMixedBimodalAssistiveProfile(...
 % ---------- y = trajectory as an array of length n_points
 
     % Some parameters.
-    ratio = 1;  % ratio of peak extension to peak flexion
+    ratio = 2/3;  % ratio of peak extension to peak flexion
     f_ext = force;
     f_flex = ratio*f_ext;
 
