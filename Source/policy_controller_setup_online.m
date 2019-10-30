@@ -19,7 +19,7 @@ settings.z_offset = 0;
 
 % Subject-related experiment parameter calculations
 settings.speed = 1.2*sqrt(0.1*9.81*settings.leg_length);
-settings.force = 0.15*settings.mass;
+settings.force = 0.235*settings.mass;
 
 % Data directory
 settings.subject_prefix = 'S';
