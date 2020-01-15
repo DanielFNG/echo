@@ -1,14 +1,14 @@
 %% The stuff that probably has to change/be looked over between experiments.
 
 % Root directory (may change between PC's)
-settings.root_dir = 'N:\Shared_Data\HIL\Bimodal_test';
+settings.root_dir = 'N:\Shared_Data\HIL\Bimodal HIL Optimisation';
 
 % Subject specific settings.
 settings.subject_id = 4;
-settings.mass = 80;
-settings.combined_mass = 90;
+settings.mass = 74.5; %94.5
+settings.combined_mass = 81.5;
 settings.leg_length = 0.92;
-settings.toe_length = 0.065;
+settings.toe_length = 0.08;
 
 % Co-ordinate system offsets - calculate these using motion function.
 settings.x_offset = 0;
@@ -19,7 +19,7 @@ settings.z_offset = 0;
 
 % Subject-related experiment parameter calculations
 settings.speed = 1.2*sqrt(0.1*9.81*settings.leg_length);
-settings.force = 0.15*settings.mass;
+settings.force = 0.235*settings.mass;
 
 % Data directory
 settings.subject_prefix = 'S';
