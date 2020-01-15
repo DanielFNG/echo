@@ -4,11 +4,11 @@
 settings.root_dir = 'N:\Shared_Data\HIL\Bimodal HIL Optimisation';
 
 % Subject specific settings.
-settings.subject_id = 4;
-settings.mass = 74.5; %94.5
-settings.combined_mass = 81.5;
-settings.leg_length = 0.92;
-settings.toe_length = 0.08;
+settings.subject_id = 5;
+settings.mass = 0;
+settings.combined_mass = 0;
+settings.leg_length = 0;
+settings.toe_length = 0;
 
 % Co-ordinate system offsets - calculate these using motion function.
 settings.x_offset = 0;
@@ -91,10 +91,10 @@ settings.cadence_folder = 'Cadence';
 
 % Bayesian optimisation settings. 
 settings.iter_func = @(x) x;
-settings.max_iterations = 24;
-settings.num_seed_points = 12;  % fully randomised measurements first
+settings.max_iterations = 30;
+settings.num_seed_points = 1;  % fully randomised measurements first
 settings.acquisition_function = 'expected-improvement-plus';
-settings.bayesopt_args = {'ExplorationRatio', 0.5};  % stuff like exploration 
+settings.bayesopt_args = {'ExplorationRatio', 0.05};  % stuff like exploration 
                                                      % ratio would be here
 
 %% Final set up steps
