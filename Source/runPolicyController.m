@@ -82,7 +82,8 @@ optimisation_variables = [pext, rise, pflex, fall];
 % Initialise Bayesian optimisation with a single step, & save result.
 global G__iteration;
 G__iteration = 1;
-results = bayesopt(objective_function, ...
+results = cell(settings.max_iterations, 1);
+results{1} = bayesopt(objective_function, ...
     optimisation_variables, ...
     'XConstraintFcn', settings.parameter_constraints, ... 
     'AcquisitionFunctionName', settings.acquisition_function, ...
@@ -95,17 +96,29 @@ save(settings.save_file, 'results', 'G__iteration');
 % Run Bayesian optimisation for remaining steps. 
 while G__iteration <= settings.max_iterations - 1
     G__iteration = G__iteration + 1;
-    old_results = results;
     try
-        results = old_results.resume('MaxObjectiveEvaluations', 1);
+        results{G__iteration} = results{G__iteration - 1}.resume(...
+            'MaxObjectiveEvaluations', 1);
     catch err
         disp(err.message);
         beep;
-        input('Press enter when ready to retry.\n');
-        results = old_results;
-        G__iteration = G__iteration - 1;
+        while true 
+            str = input(['Press enter to retry from this iteration, or ' ...
+                'integer i > 1 to retry from iteration i.\n'], 's');
+            if isempty(str)
+                G__iteration = G__iteration - 1;
+                break;
+            else
+                num = str2num(str); %#ok<ST2NM>
+                if ~isempty(num)
+                    G__iteration = num - 1;
+                    break
+                end
+            end
+        end
     end
-    save(settings.save_file, 'results', 'G__iteration');
+    these_results = results{G__iteration};
+    save(settings.save_file, 'these_results', 'G__iteration');
 end
 
 end
