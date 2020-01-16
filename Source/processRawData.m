@@ -1,4 +1,4 @@
-function [cycles, times] = processRawData(...
+function [cycles, times, fail] = processRawData(...
     markers, grfs, save_dir, osim_dir, settings, assistance_params)
 
     function times = process(...
@@ -33,7 +33,12 @@ function [cycles, times] = processRawData(...
             % Wait until raw vicon data is available.
             [path, name, ~] = fileparts(markers);
             trial_name = [path filesep name];
-            waitUntilWritable([trial_name '.x2d'], 0.5);
+            fail = waitUntilWritable([trial_name '.x2d'], 0.5);
+            if fail
+                cycles = 0;
+                times = 0;
+                return
+            end
             pause(4); % 4 second pause to give extra 4s of assistance - so as 
                       % not to confuse subject with audio feedback while 
                       % still recording

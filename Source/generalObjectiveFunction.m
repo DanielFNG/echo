@@ -60,7 +60,7 @@ function result = generalObjectiveFunction(X, settings)
                 settings.force, pext, rise, pflex, fall);
 
             % Obtain gait cycles from raw data processing.
-            [cycles, times] = processRawData(paths.files.markers, ...
+            [cycles, times, fail] = processRawData(paths.files.markers, ...
                 paths.files.grfs, paths.directories.segmented_inner, ...
                 paths.directories.opensim_inner, settings, params);
 
@@ -72,6 +72,11 @@ function result = generalObjectiveFunction(X, settings)
                 num2str(peak) sep num2str(fall) '.mat'], settings.var);
             cycles = S.(settings.var);
 
+    end
+    
+    if fail
+        result = 1000;
+        return
     end
     
     switch settings.baseline_mode
