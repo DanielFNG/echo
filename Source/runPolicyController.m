@@ -111,6 +111,7 @@ while G__iteration <= settings.max_iterations - 1
             else
                 num = str2num(str); %#ok<ST2NM>
                 if ~isempty(num)
+                    results(num:end) = {0};
                     G__iteration = num - 1;
                     break
                 end

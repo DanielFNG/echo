@@ -9,7 +9,7 @@ while ~(exist(file, 'file') == 2)
     pause(time);
     while toc > timeout
         str = input(['Long waiting time detected. Input 0 to keep waiting, ' ...
-            '1 to throw an error, or 2 to assign a value of 1000.'], 's');
+            '1 to throw an error, or 2 to assign a value of 1000.\n'], 's');
         if strcmp(str, '0')
             tic;
         elseif strcmp(str, '1')
