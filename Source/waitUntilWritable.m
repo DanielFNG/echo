@@ -1,7 +1,7 @@
 function fail = waitUntilWritable(file, time)
 % Check if a file exists & is writable. Pause for a given time if not. Repeat. 
 
-timeout = 30;
+timeout = 90;
 
 tic;
 while ~(exist(file, 'file') == 2)
