@@ -1,12 +1,11 @@
 %% The stuff that probably has to change/be looked over between experiments.
 
 % Root directory (may change between PC's)
-settings.root_dir = 'N:\Shared_Data\HIL\Bimodal HIL Optimisation';
+settings.root_dir = 'N:\Shared_Data\HIL\FES';
 
 % Subject specific settings.
-settings.subject_id = 5;
+settings.subject_id = 1;
 settings.mass = 0;
-settings.combined_mass = 0;
 settings.leg_length = 0;
 settings.toe_length = 0;
 
@@ -19,7 +18,6 @@ settings.z_offset = 0;
 
 % Subject-related experiment parameter calculations
 settings.speed = 1.2*sqrt(0.1*9.81*settings.leg_length);
-settings.force = 0.235*settings.mass;
 
 % Data directory
 settings.subject_prefix = 'S';
@@ -30,19 +28,18 @@ settings.base_dir = [settings.root_dir filesep settings.subject_prefix ...
 settings.operation_mode = 'online';
 
 % Data inputs - markers only, grfs only, motion (both), emg (emg + grf).
-settings.data_inputs = 'Motion';
+settings.data_inputs = 'Markers';
 
 % Motion metric specific settings.
-settings.metric = @calculateMetabolicRate;
+settings.metric = @calculateFootInversion;
 settings.args = {};
-settings.opensim_analyses = {'IK', 'SO'};
-load_file = ...
-    [getenv('OPENSIM_MATLAB_HOME') filesep 'Defaults' filesep 'apo.xml'];
-settings.opensim_args = {'load', load_file};  % APO force model
-settings.motion_analyses = {'SO'};
+settings.opensim_analyses = {'IK'};
+settings.opensim_args = {};  % APO force model
+settings.motion_analyses = {'IK'};
 
-% Baseline mode - none, absolute or relative.
-settings.baseline_mode = 'none';
+% Baseline mode - none, fixed, absolute or relative.
+settings.baseline_mode = 'fixed';
+settings.baseline = 0; % Need to fill this in if using fixed baseline. 
 settings.baseline_filename = [];
 
 % Experiment specific settings.
@@ -63,20 +60,18 @@ settings.grf_system.right = '+x';
 % Valid ranges for the control parameters. NOTE: if
 % multiplier*min_rise_range is less than 10, we will have problems with the
 % TCP-IP solution.
-settings.pext_range = [5, 25];
-settings.rise_range = [25, 45];
-settings.pflex_range = [50, 80];
-settings.fall_range = [70, 95];
+settings.pulse_width = [1, 9];
+settings.current = [2, 10];
+settings.rise_range = [0, 8];
+settings.ext_range = [0, 8];
+settings.fall_range = [0, 8];
 
-% Control parameter variables.
-%settings.parameter_constraints = @(x) (parameterConstraints(x, ...
-%settings.multiplier, settings.min_length));
-%settings.min_length = 20;
-settings.multiplier = 1;
-settings.parameter_constraints = @bimodalParameterConstraints;
+% Control parameter multiplier.
+settings.current_multipler = 10;
+settings.time_multiplier = 250;
 
 % Save file name - where the bayesopt results will be saved.
-settings.save_file = [settings.base_dir filesep 'hil-results.mat'];
+settings.save_file = [settings.base_dir filesep 'hil-fes-results.mat'];
 
 % Data filestructure.
 settings.name = 'capture';
