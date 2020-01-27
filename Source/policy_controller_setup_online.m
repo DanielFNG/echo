@@ -39,14 +39,12 @@ settings.motion_analyses = {'IK'};
 
 % Baseline mode - none, fixed, absolute or relative.
 settings.baseline_mode = 'fixed';
-settings.baseline = 0; % Need to fill this in if using fixed baseline. 
-settings.baseline_filename = [];
 
 % Experiment specific settings.
 settings.inclination = 0;
 
 % Data processing specific settings.
-settings.feet = {'right'};
+settings.feet = {'left'};
 settings.seg_mode = 'stance';
 settings.seg_cutoff = 2;
 settings.time_delay = 0;
@@ -116,13 +114,18 @@ createScaledModel(settings);
 % OpenSim model adjusted.
 input(['Ensure the inital unassisted ''' settings.initial_walk ''' data has '...
     'been collected, input any key to continue.\n']);
-[settings.model, markers, grf] = createAdjustedModel(settings);
+[settings.model, markers, grf, raw_markers, raw_grf] = ...
+    createAdjustedModel(settings);
 input(['Model adjustment completed. Input any key to confirm visual ' ...
     'analysis of model and proceed to cadence computation.\n']);
 
 % Optimal cadence computed.
 cadence = computeDesiredCadence(settings, markers, grf);
 fprintf('Cadence calculation completed - set metronome to %i BPM.\n', cadence);
+
+% Compute fixed baseline on cadence data - using the opposite side. 
+side = 'right';
+baseline = computeBaseline(raw_markers, raw_grf, side, settings);
 
 %% Run HIL optimisation
 
