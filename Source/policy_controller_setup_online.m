@@ -51,7 +51,6 @@ settings.inclination = 0;
 % Data processing specific settings.
 settings.feet = {'right'};
 settings.seg_mode = 'stance';
-settings.seg_cutoff = 2;
 settings.time_delay = 0;
 settings.marker_system.forward = '+z';
 settings.marker_system.up = '+y';

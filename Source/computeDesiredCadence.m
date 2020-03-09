@@ -12,7 +12,7 @@ function cadence = computeDesiredCadence(settings, markers, grfs)
     % Compute BPM for each trial. 
     for i=1:n_trials
         motion_data = MotionData(trials{i}, settings.leg_length, ...
-            settings.toe_length, analyses, settings.seg_cutoff);
+            settings.toe_length, analyses);
         cycles{i} = GaitCycle(motion_data);
     end
     

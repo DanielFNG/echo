@@ -12,7 +12,6 @@ leg_length = 0.91;
 toe_length = 0.085;
 analyses = {'GRF', 'IK'};
 osim_analyses = {'IK'};
-grf_cutoff = 2;
 iterations = 20;
 metric = @calculatePeak;
 metric_args = {'hip_flexion_r'};
@@ -32,7 +31,7 @@ cycles{n_grfs} = {};
 for i=1:n_grfs
     trial = OpenSimTrial(model, kinematics{i}, save_dir, grfs{i});
     trial.run(osim_analyses);
-    motion = MotionData(trial, leg_length, toe_length, analyses, grf_cutoff);
+    motion = MotionData(trial, leg_length, toe_length, analyses);
     cycles{i} = GaitCycle(motion);
 end
 
@@ -63,7 +62,7 @@ for iter = 1:iterations
         trial = OpenSimTrial(model, kinematics{i}, save_dir, grfs{i});
         trial.run(osim_analyses);
         motion = ...
-            MotionData(trial, leg_length, toe_length, analyses, grf_cutoff);
+            MotionData(trial, leg_length, toe_length, analyses);
         cycles{i} = GaitCycle(motion);
     end
     
