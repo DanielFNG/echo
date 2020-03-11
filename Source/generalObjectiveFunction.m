@@ -88,7 +88,8 @@ function result = generalObjectiveFunction(X, settings)
                     result = calculateEMGScore(emg_data, times);
                 otherwise
                     result = computeMeanMetricDifference(cycles, ...
-                        settings.baseline, settings.metric, settings.args{:});
+                        settings.metric, settings.baseline, true, ...
+                        settings.args{:});
             end
         case 'relative'
             % Calculate the relative baseline for this trial, not yet

@@ -31,7 +31,7 @@ function result = calculateGroundTruth(...
                         num2str(f) '.mat'], 'gait');
                     
                     result(rise, peak, fall) = computeMeanMetricDifference(...
-                        data.gait, baseline, metric, varargin{:});
+                        data.gait, metric, baseline, true, varargin{:});
                 else
                     result(rise, peak, fall) = 100;
                 end

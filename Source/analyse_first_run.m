@@ -69,7 +69,7 @@ for iter = 1:iterations
     averages(iter) = computeMeanMetric(cycles, metric, true, metric_args{:});
     
     [result(iter), sdev(iter)] = ...
-        computeMeanMetricDifference(cycles, baseline, metric, metric_args{:});
+        computeMeanMetricDifference(cycles, metric, baseline, true, metric_args{:});
     
 end
 
