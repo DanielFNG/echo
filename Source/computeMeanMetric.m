@@ -1,9 +1,10 @@
-function [result, sdev] = computeMeanMetric(input, metric, varargin)
+function [result, sdev] = computeMeanMetric(input, metric, flag, varargin)
 % Computes the mean value of a metric given input GaitCycles.
 %
 % Input:
 %        input - cell array of gait cycles, can be nested
 %        metric - reference to metric function to be used
+%        flag - if true, remove outliers from metric results
 %        varargin - additional arguments to metric function
 % Output:
 %         result - mean value of metric over all gait cycles
@@ -21,8 +22,12 @@ function [result, sdev] = computeMeanMetric(input, metric, varargin)
         sample_data(i) = metric(gait_cycle, varargin{:});
     end
     
-    % Remove outliers.
-    sample_data = sample_data(~isoutlier(sample_data));
+    % Remove outliers if requested.
+    if flag
+        while any(isoutlier(sample_data))
+            sample_data = sample_data(~isoutlier(sample_data));
+        end
+    end
     
     % Compute mean metric value.
     result = mean(sample_data);

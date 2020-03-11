@@ -17,6 +17,6 @@ function cadence = computeDesiredCadence(settings, markers, grfs)
     end
     
     % Result - take mean and round.
-    [time, ~] = computeMeanMetric(cycles, @calculateTotalTime);
+    [time, ~] = computeMeanMetric(cycles, @calculateTotalTime, true);
     cadence = round(60/time);
 end

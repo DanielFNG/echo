@@ -59,7 +59,7 @@ if strcmp(settings.baseline_mode, 'absolute')
             % Compute the mean value of the metric from the baseline data, & use
             % this as the baseline going forward.
             settings.baseline = computeMeanMetric(...
-                cycles, settings.metric, settings.args{:});
+                cycles, settings.metric, true, settings.args{:});
     end
     
     % More handy output.

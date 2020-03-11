@@ -27,7 +27,7 @@ args = {'x', 'min'};
 name = 'XPMoS';
 
 % Calculate baseline.
-baseline = computeMeanMetric(baseline.gait, metric, args{:});
+baseline = computeMeanMetric(baseline.gait, metric, true, args{:});
 
 % Calculate ground truth.
 ground_truth = calculateGroundTruth(...

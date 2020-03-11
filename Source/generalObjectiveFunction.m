@@ -103,7 +103,7 @@ function result = generalObjectiveFunction(X, settings)
                 otherwise
                     % Compute & report mean metric value
                     result = computeMeanMetric(...
-                        cycles, settings.metric, settings.args{:});
+                        cycles, settings.metric, true, settings.args{:});
             end
     end
 

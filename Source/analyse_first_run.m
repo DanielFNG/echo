@@ -35,7 +35,7 @@ for i=1:n_grfs
     cycles{i} = GaitCycle(motion);
 end
 
-baseline = computeMeanMetric(cycles, metric, metric_args{:});
+baseline = computeMeanMetric(cycles, metric, true, metric_args{:});
 
 %% Compute the result for each trial
 root = [base filesep 'processed'];
@@ -66,7 +66,7 @@ for iter = 1:iterations
         cycles{i} = GaitCycle(motion);
     end
     
-    averages(iter) = computeMeanMetric(cycles, metric, metric_args{:});
+    averages(iter) = computeMeanMetric(cycles, metric, true, metric_args{:});
     
     [result(iter), sdev(iter)] = ...
         computeMeanMetricDifference(cycles, baseline, metric, metric_args{:});
