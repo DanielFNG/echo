@@ -1,11 +1,15 @@
 function [result, sdev] = ...
-    computeMeanMetricDifference(input, comp, metric, varargin)
-% Computes the mean difference over GaitCycles between a metric & a given value.
+    computeMeanMetricDifference(input, metric, comp, flag, varargin)
+% Computes the mean absolute difference over GaitCycles between a metric & a 
+% given value. Note that compared to computeMeanMetric this is for analysing
+% the difference from some baseline value, and also that here the absolute
+% value of the metric difference is taken rather than the signed value.
 %
 % Input:
 %        input - cell array of gait cycles, can be nested
-%        comp - baseline, or value for comparison
 %        metric - reference to metric function to be used
+%        comp - baseline, or value for comparison
+%        flag - if true, remove outliers from metric results
 %        varargin - additional arguments to metric function
 % Output:
 %         result - mean value of metric over all gait cycles
@@ -23,8 +27,12 @@ function [result, sdev] = ...
         sample_data(i) = metric(gait_cycle, varargin{:});
     end
     
-    % Remove outliers.
-    sample_data = sample_data(~isoutlier(sample_data));
+    % Remove outliers if requested.
+    if flag
+        while any(isoutlier(sample_data))
+            sample_data = sample_data(~isoutlier(sample_data));
+        end
+    end
     
     % Compute mean metric value.
     result = mean(abs(sample_data - comp));
