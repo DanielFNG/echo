@@ -16,7 +16,7 @@ function measurements = processSteadyStateMetabolicData(...
     end
 
     % Get raw data. 
-    time = metabolic_data.getTimesteps();
+    time = metabolic_data.Timesteps;
     raw = (metabolic_data.getColumn('Metabolic Equivalent'));
     raw = raw * 1.163; % Get metabolic rate in terms of W/kg.
     

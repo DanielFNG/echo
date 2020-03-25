@@ -23,7 +23,7 @@ function channel_array = calculateIntegratedEMG(emg_data, seg_times)
     for i=1:n_channels
         value_array = zeros(1, n_cycles);
         for j=1:n_cycles
-            time = emg_set{j}.getTimesteps();
+            time = emg_set{j}.Timesteps;
             value_array(j) = trapz(time, emg_set{j}.getColumn(voltage_cols(i)));
         end
         channel_array{i} = value_array;

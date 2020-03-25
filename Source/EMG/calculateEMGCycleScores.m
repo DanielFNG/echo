@@ -11,7 +11,7 @@ function [total, scores] = calculateEMGCycleScores(emg_data)
 %       - score, the averaged integrated EMG signal for each gait cycle
 
     % Obtain the time array, array of channels and the number of channels. 
-    time = emg_data.getTimesteps();
+    time = emg_data.Timesteps;
     channels = 3:emg_data.NCols;
     n_channels = length(channels);
     
