@@ -130,6 +130,9 @@ fprintf('Cadence calculation completed - set metronome to %i BPM.\n', cadence);
 
 %% Run HIL optimisation
 
+% Save settings information for future reference
+save([settings.base_dir filesep 'settings.mat'], settings);
+
 % Run policy controller. 
 input(['On the Vicon PC, change the trial name to ' ...
     sprintf(['%s' settings.format], settings.name, 1) '. Ensure that the '...
