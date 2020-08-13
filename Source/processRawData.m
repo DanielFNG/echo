@@ -1,25 +1,39 @@
 function [cycles, times, fail] = processRawData(...
     markers, grfs, save_dir, osim_dir, settings, assistance_params)
 
-    function times = process(...
+    function [times, status] = process(...
             markers, grfs, save_dir, settings, assistance_params)
         times = 0;
-        if isempty(markers)
+        if isempty(markers) % OLD - NEEDS UPDATING WITH M-D-P
             times = processGRFData(save_dir, grfs, ...
                 settings.grf_system, ...
                 settings.speed, settings.inclination, ...
                 assistance_params, settings.feet, 'GRF');
-        elseif isempty(grfs)
+        elseif isempty(grfs) % OLD - NEEDS UPDATING WITH M-D-P
             processMarkerData(save_dir, markers, ...
                 settings.marker_system, ...
                 settings.speed, settings.feet, 'Markers');
         else
-            processMotionData(save_dir, save_dir, markers, grfs, ...
-                settings.marker_system, settings.grf_system, ...
-                settings.x_offset, settings.y_offset, settings.z_offset, ...
-                settings.time_delay, settings.speed, settings.inclination, ...
-                assistance_params, settings.feet, ...
-                settings.seg_mode, 'Markers', 'GRF');
+            % Construct folder paths struct
+            folders.Markers = markers;
+            folders.GRF = grfs;
+            
+            % Construct batch settings
+            batch_settings.SaveDirectory = save_dir;
+            batch_settings.info = false;
+            batch_settings.CoordinateTranslation = ...
+                settings.CoordinateTranslation;
+            batch_settings.CoordinateRotation = ...
+                settings.CoordinateRotation;
+            batch_settings.GRFSystem = settings.grf_system;
+            batch_settings.Inclination = 0;
+            batch_settings.Speed = settings.speed;
+            batch_settings.GRFDelay = 0;
+            batch_settings.SegmentationMode = 'Stance';
+            batch_settings.Feet = 'Right';
+            
+            % Process batch of data
+            status = batchProcessData(folders, batch_settings);
         end
     end
 
@@ -34,8 +48,8 @@ function [cycles, times, fail] = processRawData(...
                 times = 0;
                 return
             end
-            pause(4); % 4 second pause to give extra 4s of assistance - so as 
-                      % not to confuse subject with audio feedback while 
+            pause(4); % 4 second pause to give extra 4s of assistance - so 
+                      % as not to confuse subject with audio feedback while 
                       % still recording
             processViconData(trial_name, settings);
         else
@@ -55,18 +69,17 @@ function [cycles, times, fail] = processRawData(...
     end
     
     % Some output.
-    fprintf('\nRaw data files available. Beginning processing steps now.\n');
+    fprintf(...
+        '\nRaw data files available. Beginning processing steps now.\n');
 
     % Process the data, fixing any gaps at the start/end of trials.
-    try
-        times = process(markers, grfs, save_dir, settings, assistance_params);
-    catch
+    [times, status] = process(...
+        markers, grfs, save_dir, settings, assistance_params);
+    if status ~= 0
         % Try one more time incase it wasn't fully printed.
-        try
-            process(markers, grfs, save_dir, settings, assistance_params);
-        catch err
-            rethrow(err);
-        end
+        [~, status] = process(...
+            markers, grfs, save_dir, settings, assistance_params);
+        rethrow(err);
     end
 
     % Run appropriate OpenSim analyses.

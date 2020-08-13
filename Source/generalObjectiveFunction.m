@@ -49,30 +49,26 @@ function result = generalObjectiveFunction(X, settings)
             % Apply APO torque pattern.
             sendControlParameters(settings.vicon_server, ...
                 pext, rise, pflex, fall);
-            %fprintf('\nApply pext %i, rise %i, pflex %i, fall %i.\n', pext, rise, pflex, fall);
-            %input('Press any key to continue.');
-
-            % Construct filenames & create directories.
-            paths = constructPaths(settings, G__iteration);
-            
-            % Construct assistance parameters.
-            params = constructAssistanceParams(...
-                settings.force, pext, rise, pflex, fall);
-
-            % Obtain gait cycles from raw data processing.
-            [cycles, times, fail] = processRawData(paths.files.markers, ...
-                paths.files.grfs, paths.directories.segmented_inner, ...
-                paths.directories.opensim_inner, settings, params);
 
         case 'offline'
 
-            % Load motion data.
-            sep = settings.sep;
-            S = load([settings.save_file_dir filesep num2str(rise) sep ...
-                num2str(peak) sep num2str(fall) '.mat'], settings.var);
-            cycles = S.(settings.var);
+            % Show applied APO torque parameters
+            fprintf('\nApplying pext %i, rise %i, pflex %i, fall %i.\n',...
+                pext, rise, pflex, fall);
 
     end
+    
+    % Construct filenames & create directories.
+    paths = constructPaths(settings, G__iteration);
+    
+    % Construct assistance parameters.
+    params = constructAssistanceParams(...
+        settings.force, pext, rise, pflex, fall);
+    
+    % Obtain gait cycles from raw data processing.
+    [cycles, times, fail] = processRawData(paths.files.markers, ...
+        paths.files.grfs, paths.directories.segmented_inner, ...
+        paths.directories.opensim_inner, settings, params);
     
     if fail
         result = 1000;

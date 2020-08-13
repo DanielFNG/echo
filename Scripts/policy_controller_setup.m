@@ -4,7 +4,7 @@
 settings.root_dir = 'N:\Shared_Data\HIL\Bimodal HIL Optimisation';
 
 % Subject specific settings.
-settings.subject_id = 5;
+settings.subject_id = 8;
 settings.mass = 0;
 settings.combined_mass = 0;
 settings.leg_length = 0;
@@ -52,9 +52,8 @@ settings.inclination = 0;
 settings.feet = {'right'};
 settings.seg_mode = 'stance';
 settings.time_delay = 0;
-settings.marker_system.Forward = '+z';
-settings.marker_system.Up = '+y';
-settings.marker_system.Right = '-x';
+settings.CoordinateTranslation = [0, 0, 0];
+settings.CoordinateRotation = [0, 0, 0];
 settings.grf_system.Forward = '+y';
 settings.grf_system.Up = '-z';
 settings.grf_system.Right = '+x';
