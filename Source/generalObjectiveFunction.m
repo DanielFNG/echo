@@ -66,7 +66,7 @@ function result = generalObjectiveFunction(X, settings)
         settings.force, pext, rise, pflex, fall);
     
     % Obtain gait cycles from raw data processing.
-    [cycles, times, fail] = processRawData(paths.files.markers, ...
+    [cycles, fail] = processRawData(paths.files.markers, ...
         paths.files.grfs, paths.directories.segmented_inner, ...
         paths.directories.opensim_inner, settings, params);
     
@@ -78,30 +78,16 @@ function result = generalObjectiveFunction(X, settings)
     switch settings.baseline_mode
         case 'absolute'
             % Compute & report difference from baseline.
-            switch settings.data_inputs
-                case 'EMG'
-                    emg_data = parseEMGDataFaster(paths.files.emg);
-                    result = calculateEMGScore(emg_data, times);
-                otherwise
-                    result = computeMeanMetricDifference(cycles, ...
-                        settings.metric, settings.baseline, true, ...
-                        settings.args{:});
-            end
+            result = computeMeanMetricDifference(cycles, ...
+                settings.metric, settings.baseline, true, ...
+                settings.args{:});
         case 'relative'
             % Calculate the relative baseline for this trial, not yet
             % implemented...
         case 'none'
-            switch settings.data_inputs
-                case 'EMG'
-                    emg_data = parseEMGDataFaster(paths.files.emg);
-                    disp('EMG parsed');
-                    result = calculateEMGScore(emg_data, times);
-                    disp('EMG score scomputed');
-                otherwise
-                    % Compute & report mean metric value
-                    result = computeMeanMetric(...
-                        cycles, settings.metric, true, settings.args{:});
-            end
+            % Compute & report mean metric value
+            result = computeMeanMetric(...
+                cycles, settings.metric, true, settings.args{:});
     end
 
 end

@@ -1,14 +1,14 @@
 %% The stuff that probably has to change/be looked over between experiments.
 
 % Root directory (may change between PC's)
-settings.root_dir = 'N:\Shared_Data\HIL\Bimodal HIL Optimisation';
+settings.root_dir = 'D:\Dropbox\PhD\HIL Control\Augmentation\Bimodal Assistance (Flexion-Extension)\Parameter Identification';
 
 % Subject specific settings.
 settings.subject_id = 8;
-settings.mass = 0;
-settings.combined_mass = 0;
-settings.leg_length = 0;
-settings.toe_length = 0;
+settings.mass = 70;
+settings.combined_mass = 75;
+settings.leg_length = 0.93;
+settings.toe_length = 0.1;
 
 % Co-ordinate system offsets - calculate these using motion function.
 settings.x_offset = 0;
@@ -27,7 +27,7 @@ settings.base_dir = [settings.root_dir filesep settings.subject_prefix ...
     num2str(settings.subject_id)];
 
 % Operation mode - online or offline.
-settings.operation_mode = 'online';
+settings.operation_mode = 'offline';
 
 % Data inputs - markers only, grfs only, motion (both), emg (emg + grf).
 settings.data_inputs = 'Motion';
@@ -51,12 +51,14 @@ settings.inclination = 0;
 % Data processing specific settings.
 settings.feet = {'right'};
 settings.seg_mode = 'stance';
-settings.time_delay = 0;
-settings.CoordinateTranslation = [0, 0, 0];
-settings.CoordinateRotation = [0, 0, 0];
+settings.sync_index = 1;
+settings.time_delays = [0, 0];
+settings.vicon_translation = [0, 0, 0];
+settings.vicon_rotation = [0, 0, 0];
 settings.grf_system.Forward = '+y';
 settings.grf_system.Up = '-z';
 settings.grf_system.Right = '+x';
+settings.inclination = 0;
 
 % Valid ranges for the control parameters. NOTE: if
 % multiplier*min_rise_range is less than 10, we will have problems with the
@@ -104,33 +106,40 @@ catch
     fprintf('Parpool already active.\n');
 end
 
-% Instruct operator to begin setting up the Vicon PC.
-input(['Execute the runViconPC script on the Vicon PC.\n'...
-    'Input any key when prompted by the Vicon PC.\n']);
+if strcmp(settings.operation_mode, 'online')
+    % Instruct operator to begin setting up the Vicon PC.
+    input(['Execute the runViconPC script on the Vicon PC.\n'...
+        'Input any key when prompted by the Vicon PC.\n']);
 
-% Connect to the Vicon PC.
-settings.vicon_server = connectToViconServer();
+    % Connect to the Vicon PC.
+    settings.vicon_server = connectToViconServer();
 
-% OpenSim model created & scaled. 
-input(['Ensure the ''' settings.static_file ''' file has been created.\n' ...
-    'Input any key to continue.\n']);
-createScaledModel(settings);
+    % OpenSim model created & scaled. 
+    input(['Ensure the ''' settings.static_file ...
+        ''' file has been created.\nInput any key to continue.\n']);
+    createScaledModel(settings);
 
-% OpenSim model adjusted.
-input(['Ensure the inital unassisted ''' settings.initial_walk ''' data has '...
-    'been collected, input any key to continue.\n']);
-[settings.model, markers, grf] = createAdjustedModel(settings);
-input(['Model adjustment completed. Input any key to confirm visual ' ...
-    'analysis of model and proceed to cadence computation.\n']);
+    % OpenSim model adjusted.
+    input(['Ensure the inital unassisted ''' settings.initial_walk ...
+        ''' data has been collected, input any key to continue.\n']);
+    [settings.model, markers, grf] = createAdjustedModel(settings);
+    input(['Model adjustment completed. Input any key to confirm visual ' ...
+        'analysis of model and proceed to cadence computation.\n']);
 
-% Optimal cadence computed.
-cadence = computeDesiredCadence(settings, markers, grf);
-fprintf('Cadence calculation completed - set metronome to %i BPM.\n', cadence);
+    % Optimal cadence computed.
+    cadence = computeDesiredCadence(settings, markers, grf);
+    fprintf('Cadence calculation completed - set metronome to %i BPM.\n', ...
+        cadence);
+else
+    % Assume model adjustment already complete
+    settings.model = [settings.base_dir filesep settings.model_folder ...
+        filesep settings.adjusted_model_name];
+end
 
 %% Run HIL optimisation
 
 % Save settings information for future reference
-save([settings.base_dir filesep 'settings.mat'], settings);
+save([settings.base_dir filesep 'settings.mat'], 'settings');
 
 % Run policy controller. 
 input(['On the Vicon PC, change the trial name to ' ...
