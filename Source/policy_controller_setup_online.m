@@ -4,11 +4,11 @@
 settings.root_dir = 'N:\Shared_Data\HIL\Bimodal HIL Optimisation';
 
 % Subject specific settings.
-settings.subject_id = 5;
-settings.mass = 0;
-settings.combined_mass = 0;
-settings.leg_length = 0;
-settings.toe_length = 0;
+settings.subject_id = 1;
+settings.mass = 73.7;
+settings.combined_mass = settings.mass + 6.8;  % APO + accessories = 6.8kg
+settings.leg_length = 0.91;
+settings.toe_length = 0.0075;
 
 % Co-ordinate system offsets - calculate these using motion function.
 settings.x_offset = 0;

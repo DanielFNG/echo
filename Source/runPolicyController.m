@@ -1,4 +1,4 @@
-function runPolicyController(settings)
+function runPolicyController(settings, load_file)
 % Runs policy controller given adequete settings. 
 %
 % This function is designed to be called from the policy_controller_setup 
@@ -81,19 +81,27 @@ pflex = ...
 fall = optimizableVariable('fall', settings.fall_range, 'Type', 'integer');
 optimisation_variables = [pext, rise, pflex, fall];
 
-% Initialise Bayesian optimisation with a single step, & save result.
 global G__iteration;
-G__iteration = 1;
 results = cell(settings.max_iterations, 1);
-results{1} = bayesopt(objective_function, ...
-    optimisation_variables, ...
-    'XConstraintFcn', settings.parameter_constraints, ... 
-    'AcquisitionFunctionName', settings.acquisition_function, ...
-    'MaxObjectiveEvaluations', 1, ...
-    'NumSeedPoints', settings.num_seed_points, ...
-    'PlotFcn', [], ...
-    settings.bayesopt_args{:});
-save(settings.save_file, 'results', 'G__iteration');
+if nargin == 1
+    % Initialise Bayesian optimisation with a single step, & save result.
+    G__iteration = 1;
+    results{1} = bayesopt(objective_function, ...
+        optimisation_variables, ...
+        'XConstraintFcn', settings.parameter_constraints, ... 
+        'AcquisitionFunctionName', settings.acquisition_function, ...
+        'MaxObjectiveEvaluations', 1, ...
+        'NumSeedPoints', settings.num_seed_points, ...
+        'PlotFcn', [], ...
+        settings.bayesopt_args{:});
+    save(settings.save_file, 'results', 'G__iteration');
+else
+    % Load an existing save
+    loaded_data = load(load_file);
+    G__iteration = loaded_data.G__iteration;
+    results = loaded_data.results;
+end
+    
 
 % Run Bayesian optimisation for remaining steps. 
 while G__iteration <= settings.max_iterations - 1
@@ -130,9 +138,12 @@ while G__iteration <= settings.max_iterations - 1
             end
         end
     end
-    these_results = results{G__iteration};
-    save(settings.save_file, 'these_results', 'G__iteration');
+    save(settings.save_file, 'results', 'G__iteration');
 end
+
+% We've finished, so save the final results now.
+final_results = results{end};
+save(settings.save_file, 'final_results', 'results', 'G__iteration');
 
 end
 
