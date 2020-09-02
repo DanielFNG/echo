@@ -52,12 +52,12 @@ settings.inclination = 0;
 settings.feet = {'right'};
 settings.seg_mode = 'stance';
 settings.time_delay = 0;
-settings.marker_system.forward = '+z';
-settings.marker_system.up = '+y';
-settings.marker_system.right = '-x';
-settings.grf_system.forward = '+y';
-settings.grf_system.up = '-z';
-settings.grf_system.right = '+x';
+settings.marker_system.Forward = '+z';
+settings.marker_system.Up = '+y';
+settings.marker_system.Right = '-x';
+settings.grf_system.Forward = '+y';
+settings.grf_system.Up = '-z';
+settings.grf_system.Right = '+x';
 
 % Valid ranges for the control parameters. NOTE: if
 % multiplier*min_rise_range is less than 10, we will have problems with the
