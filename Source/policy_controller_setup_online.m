@@ -110,7 +110,8 @@ input(['Execute the runViconPC script on the Vicon PC.\n'...
     'Input any key when prompted by the Vicon PC.\n']);
 
 % Connect to the Vicon PC.
-settings.vicon_server = connectToViconServer();
+global vicon_server_connection; 
+vicon_server_connection = connectToViconServer();
 
 % OpenSim model created & scaled. 
 input(['Ensure the ''' settings.static_file ''' file has been created.\n' ...

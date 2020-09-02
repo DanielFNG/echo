@@ -24,7 +24,8 @@ function processViconData(trial, settings)
     vicon.SaveTrial(timeout);
     
     % Tell the Vicon PC to go live again.
-    fwrite(settings.vicon_server, '0', 'uchar');
+    global vicon_server_connection;
+    fwrite(vicon_server_connection, '0', 'uchar');
 
 end
 

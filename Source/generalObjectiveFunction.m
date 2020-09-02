@@ -1,6 +1,7 @@
 function result = generalObjectiveFunction(X, settings)
 
     global G__iteration;
+    global vicon_server_connection;
 
     function paths = constructPaths(settings, G__iteration)
         % Construct the mid-level strings & paths for the policy controller.
@@ -47,7 +48,7 @@ function result = generalObjectiveFunction(X, settings)
         case 'online'
 
             % Apply APO torque pattern.
-            sendControlParameters(settings.vicon_server, ...
+            sendControlParameters(vicon_server_connection, ...
                 pext, rise, pflex, fall);
             %fprintf('\nApply pext %i, rise %i, pflex %i, fall %i.\n', pext, rise, pflex, fall);
             %input('Press any key to continue.');

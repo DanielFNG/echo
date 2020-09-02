@@ -4,6 +4,8 @@ function runPolicyController(settings)
 % This function is designed to be called from the policy_controller_setup 
 % script.
 
+global vicon_server_connection;
+
 if strcmp(settings.operation_mode, 'online')
     % Create top-level filestructure.
     settings.dirs.baseline = [settings.base_dir filesep 'baseline'];
@@ -104,16 +106,26 @@ while G__iteration <= settings.max_iterations - 1
         beep;
         while true 
             str = input(['Press enter to retry from this iteration, or ' ...
-                'integer i > 1 to retry from iteration i.\n'], 's');
+                'integer i > 1 to retry from iteration i. Input 0 to '...
+                'prompt Vicon/APO reconnection process then retry.\n'], 's');
             if isempty(str)
                 G__iteration = G__iteration - 1;
                 break;
             else
                 num = str2num(str); %#ok<ST2NM>
-                if ~isempty(num)
-                    results(num:end) = {0};
-                    G__iteration = num - 1;
-                    break
+                if ~isempty(num) && num >= 0
+                    if num == 0
+                        input(['Execute the runViconPC script on the '...
+                            'Vicon PC.\nInput any key when prompted by '...
+                            'the Vicon PC.\n']);
+                        vicon_server_connection = connectToViconServer();
+                        G__iteration = G__iteration - 1;
+                        break;
+                    else
+                        results(num:end) = {0};
+                        G__iteration = num - 1;
+                        break
+                    end
                 end
             end
         end
