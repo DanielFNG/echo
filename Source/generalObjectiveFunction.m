@@ -75,7 +75,7 @@ function result = generalObjectiveFunction(X, settings)
     end
     
     if fail
-        result = 1000;
+        result = 600;
         return
     end
     
