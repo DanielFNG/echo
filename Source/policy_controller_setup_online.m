@@ -91,9 +91,9 @@ settings.cadence_folder = 'Cadence';
 % Bayesian optimisation settings. 
 settings.iter_func = @(x) x;
 settings.max_iterations = 24;
-settings.num_seed_points = 1;  % fully randomised measurements first
+settings.num_seed_points = 12;  % fully randomised measurements first
 settings.acquisition_function = 'expected-improvement-plus';
-settings.bayesopt_args = {'ExplorationRatio', 0.05};  % stuff like exploration 
+settings.bayesopt_args = {'ExplorationRatio', 0.5};  % stuff like exploration 
                                                      % ratio would be here
 
 %% Final set up steps
