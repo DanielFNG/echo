@@ -142,8 +142,8 @@ while G__iteration <= settings.max_iterations - 1
 end
 
 % We've finished, so save the final results now.
-final_results = results{end};
-save(settings.save_file, 'final_results', 'results', 'G__iteration');
+final_result = results{end};
+save(settings.save_file, 'final_result', 'results', 'G__iteration');
 
 end
 
