@@ -31,7 +31,7 @@ cycles{n_grfs} = {};
 for i=1:n_grfs
     trial = OpenSimTrial(model, kinematics{i}, save_dir, grfs{i});
     trial.run(osim_analyses);
-    motion = MotionData(trial, leg_length, toe_length, analyses);
+    motion = SimData(trial, leg_length, toe_length, analyses);
     cycles{i} = GaitCycle(motion);
 end
 
