@@ -9,14 +9,15 @@ function emg = parseEMGDataFaster(filename)
     end
     
     % Get the labels.
-    labels = strsplit(fgetl(id), '\t');
+    labels = strsplit(fgetl(id), ',');
     n_cols = length(labels);
     
     % Disregard the next line.
     fgetl(id);
     
     % A different way.
-    values = cell2mat(textscan(id, repmat('%f', 1, n_cols)));
+    format = '%f,%f,%f,%f';
+    values = cell2mat(textscan(id, format));
     
     % Close the file.
     fclose(id);
