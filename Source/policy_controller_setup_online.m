@@ -4,11 +4,11 @@
 settings.root_dir = 'N:\Shared_Data\HIL\New APO';
 
 % Subject specific settings.
-settings.subject_id = 2;
-settings.mass = 58.4;
+settings.subject_id = 6;
+settings.mass = 0;
 settings.combined_mass = settings.mass + 6.7;  % APO + accessories = 6.7kg
-settings.leg_length = 0.91;
-settings.toe_length = 0.075;
+settings.leg_length = ;
+settings.toe_length = ;
 
 % Co-ordinate system offsets - calculate these using motion function.
 settings.x_offset = 0;
@@ -19,7 +19,7 @@ settings.z_offset = 0;
 
 % Subject-related experiment parameter calculations
 settings.speed = 1.2*sqrt(0.1*9.81*settings.leg_length);
-settings.force = 0.1111*settings.mass
+settings.force = 10;  % Change to using fixed mass for next 4 subjects
 
 % Data directory
 settings.subject_prefix = 'S';
