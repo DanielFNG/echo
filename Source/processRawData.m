@@ -1,14 +1,14 @@
 function [cycles, times, fail] = processRawData(...
-    markers, grfs, save_dir, osim_dir, settings, assistance_params)
+    markers, grfs, save_dir, osim_dir, settings, apo)
 
     function times = process(...
-            markers, grfs, save_dir, settings, assistance_params)
+            markers, grfs, save_dir, settings, apo)
         times = 0;
         if isempty(markers)
             times = processGRFData(save_dir, grfs, ...
                 settings.grf_system, ...
                 settings.speed, settings.inclination, ...
-                assistance_params, settings.feet, 'GRF');
+                apo, settings.feet, 'GRF');
         elseif isempty(grfs)
             processMarkerData(save_dir, markers, ...
                 settings.marker_system, ...
@@ -18,7 +18,7 @@ function [cycles, times, fail] = processRawData(...
                 settings.marker_system, settings.grf_system, ...
                 settings.x_offset, settings.y_offset, settings.z_offset, ...
                 settings.time_delay, settings.speed, settings.inclination, ...
-                assistance_params, settings.feet, ...
+                apo, settings.feet, ...
                 settings.seg_mode, 'Markers', 'GRF');
         end
     end
@@ -59,11 +59,11 @@ function [cycles, times, fail] = processRawData(...
 
     % Process the data, fixing any gaps at the start/end of trials.
     try
-        times = process(markers, grfs, save_dir, settings, assistance_params);
+        times = process(markers, grfs, save_dir, settings, apo);
     catch
         % Try one more time incase it wasn't fully printed.
         try
-            process(markers, grfs, save_dir, settings, assistance_params);
+            process(markers, grfs, save_dir, settings, apo);
         catch err
             rethrow(err);
         end
@@ -84,9 +84,11 @@ function [cycles, times, fail] = processRawData(...
                 osim_dir, []);
     end
     
-    % Temporary measure to restrict ourselves to <= 4 trials.
-    if length(trials) > 4
-        trials = trials(end - 3:end);
+    % Temporary measure to restrict ourselves to <= 8 trials - expanded
+    % from 4 to 8 due to PC upgrade.
+    max_trials = 8;
+    if length(trials) > max_trials
+        trials = trials(end - max_trials + 1:end);
     end
     
     trials = runBatchParallel(...
@@ -101,7 +103,7 @@ function [cycles, times, fail] = processRawData(...
         toe = settings.toe_length;
         analyses = settings.motion_analyses;
         parfor i=1:n_samples
-            motion = MotionData(trials{i}, leg, toe, analyses);
+            motion = SimData(trials{i}, leg, toe, analyses);
             cycles{i} = GaitCycle(motion);
         end
     else
