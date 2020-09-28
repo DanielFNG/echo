@@ -14,12 +14,15 @@ function result = generalObjectiveFunction(X, settings)
         paths.files.markers = [];
         paths.files.grfs = [];
         paths.files.emg = [];
+        paths.files.apo = [];
         switch settings.data_inputs
             case 'Motion'
                 paths.files.markers = [settings.base_dir filesep ...
                     paths.name '.trc'];
                 paths.files.grfs = [settings.base_dir filesep ...
                     paths.name '.txt'];
+                paths.files.apo = [settings.base_dir filesep ...
+                    paths.name '.csv'];
             case 'Markers'
                 paths.files.markers = [settings.base_dir filesep ...
                     paths.name '.trc'];
@@ -55,15 +58,11 @@ function result = generalObjectiveFunction(X, settings)
 
             % Construct filenames & create directories.
             paths = constructPaths(settings, G__iteration);
-            
-            % Construct assistance parameters.
-            params = constructAssistanceParams(...
-                settings.force, pext, rise, pflex, fall);
 
             % Obtain gait cycles from raw data processing.
             [cycles, times, fail] = processRawData(paths.files.markers, ...
                 paths.files.grfs, paths.directories.segmented_inner, ...
-                paths.directories.opensim_inner, settings, params);
+                paths.directories.opensim_inner, settings, paths.files.apo);
 
         case 'offline'
 
