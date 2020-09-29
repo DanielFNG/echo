@@ -93,7 +93,7 @@ function [cycles, times, fail] = processRawData(...
         trials = trials(end - max_trials + 1:end);
     end
     
-    trials = runBatchParallel(...
+    [trials, outputs] = runBatchParallel(... % outputs will be useful for SO quantifying
         settings.opensim_analyses, trials, settings.opensim_args{:});
             
     n_samples = length(trials);
