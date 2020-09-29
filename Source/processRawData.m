@@ -37,13 +37,15 @@ function [cycles, times, fail] = processRawData(...
             pause(4); % 4 second pause to give extra 4s of assistance - so as 
                       % not to confuse subject with audio feedback while 
                       % still recording
-            processViconData(trial_name, settings);
+            processViconData(trial_name);
         else
             [path, name, ~] = fileparts(grfs);
             trial_name = [path filesep name];
             waitUntilWritable([trial_name '.x2d'], 0.5);
             processViconEMG(trial_name, settings);
         end
+    else
+        fail = false;
     end
 
     % Wait until data has finished being printed.
