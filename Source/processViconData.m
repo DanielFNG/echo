@@ -1,4 +1,4 @@
-function processViconData(trial, settings)
+function processViconData(trial)
 
     timeout = 30;
 

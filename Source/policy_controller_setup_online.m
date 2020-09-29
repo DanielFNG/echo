@@ -1,14 +1,20 @@
 %% The stuff that probably has to change/be looked over between experiments.
 
+% Operation mode - online (with subject) or offline (existing data)
+settings.operation_mode = 'offline';
+
+% APO torque style - measured or predicted
+settings.apo_torques = 'predicted';
+
 % Root directory (may change between PC's)
-settings.root_dir = 'N:\Shared_Data\HIL\New APO';
+settings.root_dir = 'D:\Dropbox\New-APO Data';
 
 % Subject specific settings.
-settings.subject_id = 6;
-settings.mass = 0;
+settings.subject_id = 5;
+settings.mass = 80.5;
 settings.combined_mass = settings.mass + 6.7;  % APO + accessories = 6.7kg
-settings.leg_length = ;
-settings.toe_length = ;
+settings.leg_length = 0.84;
+settings.toe_length = 0.07;
 
 % Co-ordinate system offsets - calculate these using motion function.
 settings.x_offset = 0;
@@ -25,9 +31,6 @@ settings.force = 10;  % Change to using fixed mass for next 4 subjects
 settings.subject_prefix = 'S';
 settings.base_dir = [settings.root_dir filesep settings.subject_prefix ...
     num2str(settings.subject_id)];
-
-% Operation mode - online or offline.
-settings.operation_mode = 'online';
 
 % Data inputs - markers only, grfs only, motion (both), emg (emg + grf).
 settings.data_inputs = 'Motion';
@@ -76,6 +79,7 @@ settings.parameter_constraints = @bimodalParameterConstraints;
 
 % Save file name - where the bayesopt results will be saved.
 settings.save_file = [settings.base_dir filesep 'hil-results.mat'];
+settings.offline_save_file = [settings.base_dir filesep 'hil-results-offline.mat'];
 
 % Data filestructure.
 settings.name = 'capture';
@@ -105,37 +109,45 @@ catch
     fprintf('Parpool already active.\n');
 end
 
-% Instruct operator to begin setting up the Vicon PC.
-input(['Execute the runViconPC script on the Vicon PC.\n'...
-    'Input any key when prompted by the Vicon PC.\n']);
+global vicon_server_connection;
+if strcmp(settings.operation_mode, 'online')
+    % Instruct operator to begin setting up the Vicon PC.
+    input(['Execute the runViconPC script on the Vicon PC.\n'...
+        'Input any key when prompted by the Vicon PC.\n']);
 
-% Connect to the Vicon PC.
-global vicon_server_connection; 
-vicon_server_connection = connectToViconServer();
+    % Connect to the Vicon PC.
+    vicon_server_connection = connectToViconServer();
 
-% OpenSim model created & scaled. 
-input(['Ensure the ''' settings.static_file ''' file has been created.\n' ...
-    'Input any key to continue.\n']);
-createScaledModel(settings);
+    % OpenSim model created & scaled. 
+    input(['Ensure the ''' settings.static_file ''' file has been created.\n' ...
+        'Input any key to continue.\n']);
+    createScaledModel(settings);
 
-% OpenSim model adjusted.
-input(['Ensure the inital unassisted ''' settings.initial_walk ''' data has '...
-    'been collected, input any key to continue.\n']);
-[settings.model, markers, grf] = createAdjustedModel(settings);
-input(['Model adjustment completed. Input any key to confirm visual ' ...
-    'analysis of model and proceed to cadence computation.\n']);
+    % OpenSim model adjusted.
+    input(['Ensure the inital unassisted ''' settings.initial_walk ''' data has '...
+        'been collected, input any key to continue.\n']);
+    processViconData([settings.base_dir filesep settings.initial_walk]);
+    [settings.model, markers, grf] = createAdjustedModel(settings);
+    input(['Model adjustment completed. Input any key to confirm visual ' ...
+        'analysis of model and proceed to cadence computation.\n']);
 
-% Optimal cadence computed.
-cadence = computeDesiredCadence(settings, markers, grf);
-fprintf('Cadence calculation completed - set metronome to %i BPM.\n', cadence);
+    % Optimal cadence computed.
+    cadence = computeDesiredCadence(settings, markers, grf);
+    fprintf('Cadence calculation completed - set metronome to %i BPM.\n', cadence);
+else
+    createScaledModel(settings);
+    [settings.model, markers, grf] = createAdjustedModel(settings);
+end
 
 %% Run HIL optimisation
 
 % Run policy controller. 
-input(['On the Vicon PC, change the trial name to ' ...
-    sprintf(['%s' settings.format], settings.name, 1) '. Ensure that the '...
-    'Vicon window\nis in full screen mode on the '...
-    'wide monitor, and is live, armed and locked.\nAll setup steps '...
-    'completed - input any key when ready to begin HIL policy controller.']);
+if strcmp(settings.operation_mode, 'online')
+    input(['On the Vicon PC, change the trial name to ' ...
+        sprintf(['%s' settings.format], settings.name, 1) '. Ensure that the '...
+        'Vicon window\nis in full screen mode on the '...
+        'wide monitor, and is live, armed and locked.\nAll setup steps '...
+        'completed - input any key when ready to begin HIL policy controller.']);
+end
 runPolicyController(settings);
 

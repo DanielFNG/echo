@@ -46,33 +46,25 @@ function result = generalObjectiveFunction(X, settings)
     pflex = settings.multiplier*X.pflex;
     fall = settings.multiplier*X.fall;
 
-    switch settings.operation_mode
-
-        case 'online'
-
-            % Apply APO torque pattern.
-            sendControlParameters(vicon_server_connection, ...
-                pext, rise, pflex, fall);
-            %fprintf('\nApply pext %i, rise %i, pflex %i, fall %i.\n', pext, rise, pflex, fall);
-            %input('Press any key to continue.');
-
-            % Construct filenames & create directories.
-            paths = constructPaths(settings, G__iteration);
-
-            % Obtain gait cycles from raw data processing.
-            [cycles, times, fail] = processRawData(paths.files.markers, ...
-                paths.files.grfs, paths.directories.segmented_inner, ...
-                paths.directories.opensim_inner, settings, paths.files.apo);
-
-        case 'offline'
-
-            % Load motion data.
-            sep = settings.sep;
-            S = load([settings.save_file_dir filesep num2str(rise) sep ...
-                num2str(peak) sep num2str(fall) '.mat'], settings.var);
-            cycles = S.(settings.var);
-
+    if strcmp(settings.operation_mode, 'online')
+        % Apply APO torque pattern.
+        sendControlParameters(vicon_server_connection, ...
+            pext, rise, pflex, fall); 
     end
+    
+    % Construct filenames & create directories.
+    paths = constructPaths(settings, G__iteration);
+    
+    % Temporary support old style of APO torques
+    if strcmp(settings.apo_torques, 'predicted')
+        paths.files.apo = constructAssistanceParams(...
+            settings.force, pext, rise, pflex, fall);
+    end
+    
+    % Obtain gait cycles from raw data processing.
+    [cycles, times, fail] = processRawData(paths.files.markers, ...
+        paths.files.grfs, paths.directories.segmented_inner, ...
+        paths.directories.opensim_inner, settings, paths.files.apo);
     
     if fail
         result = 600;

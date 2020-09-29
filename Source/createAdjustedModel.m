@@ -8,9 +8,6 @@ function [new_model, markers, grfs] = createAdjustedModel(settings)
     grf_folder = 'GRF';
     human_model = 'C:\OpenSim 4.1\Resources\Models\Gait2392_Simbody\gait2392_simbody.osim';
     adjustment = 'Adjustment';
-    
-    % Process the vicon data.
-    processViconData([settings.base_dir filesep settings.initial_walk], settings);
 
     % Process the raw marker and grf data.
     raw_markers = [settings.base_dir filesep settings.initial_walk marker_ext];
