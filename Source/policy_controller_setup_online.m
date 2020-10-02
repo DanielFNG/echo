@@ -1,20 +1,20 @@
 %% The stuff that probably has to change/be looked over between experiments.
 
 % Operation mode - online (with subject) or offline (existing data)
-settings.operation_mode = 'offline';
+settings.operation_mode = 'online';
 
 % APO torque style - measured or predicted
-settings.apo_torques = 'predicted';
+settings.apo_torques = 'measured';
 
 % Root directory (may change between PC's)
-settings.root_dir = 'D:\Dropbox\New-APO Data';
+settings.root_dir = '';
 
 % Subject specific settings.
-settings.subject_id = 5;
-settings.mass = 80.5;
+settings.subject_id = ;
+settings.mass = ;
 settings.combined_mass = settings.mass + 6.7;  % APO + accessories = 6.7kg
-settings.leg_length = 0.84;
-settings.toe_length = 0.07;
+settings.leg_length = ;
+settings.toe_length = ;
 
 % Co-ordinate system offsets - calculate these using motion function.
 settings.x_offset = 0;
@@ -45,7 +45,7 @@ settings.opensim_args = {'load', load_file};  % APO force model
 settings.motion_analyses = {'SO'};
 
 % Baseline mode - none, absolute or relative.
-settings.baseline_mode = 'none';
+settings.baseline_mode = 'relative';
 settings.baseline_filename = [];
 
 % Experiment specific settings.
