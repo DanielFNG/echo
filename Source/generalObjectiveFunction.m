@@ -53,7 +53,13 @@ function result = generalObjectiveFunction(X, settings)
     end
     
     % Construct filenames & create directories.
-    paths = constructPaths(settings, G__iteration);
+    switch settings.baseline_mode
+        case 'relative'
+            baseline_paths = constructPaths(settings, 2*G__iteration - 1);
+            paths = constructPaths(settings, 2*G__iteration);
+        otherwise
+            paths = constructPaths(settings, G__iteration);
+    end
     
     % Temporary support old style of APO torques
     if strcmp(settings.apo_torques, 'predicted')
@@ -62,6 +68,13 @@ function result = generalObjectiveFunction(X, settings)
     end
     
     % Obtain gait cycles from raw data processing.
+    if strcmp(settings.baseline_mode, 'relative')
+        [baseline_cycles, ~, ~] = processRawData(...
+            baseline_paths.files.markers, baseline_paths.files.grfs, ...
+            baseline_paths.directories.segmented_inner, ...
+            baseline_paths.directories.opensim_inner, ...
+            settings, baseline_paths.files.apo);
+    end
     [cycles, times, fail] = processRawData(paths.files.markers, ...
         paths.files.grfs, paths.directories.segmented_inner, ...
         paths.directories.opensim_inner, settings, paths.files.apo);
@@ -83,8 +96,11 @@ function result = generalObjectiveFunction(X, settings)
                         settings.baseline, settings.metric, settings.args{:});
             end
         case 'relative'
-            % Calculate the relative baseline for this trial, not yet
-            % implemented...
+            baseline = computeMeanMetric(...
+                baseline_cycles, settings.metric, settings.args{:});
+            measurement = computeMeanMetric(...
+                cycles, settings.metric, settings.args{:});
+            result = measurement - baseline;
         case 'none'
             switch settings.data_inputs
                 case 'EMG'
