@@ -1,5 +1,5 @@
 function [cycles, times, fail] = processRawData(...
-    markers, grfs, save_dir, osim_dir, settings, apo)
+    markers, grfs, save_dir, osim_dir, settings, apo, wait)
 
     function times = process(...
             markers, grfs, save_dir, settings, apo)
@@ -23,6 +23,10 @@ function [cycles, times, fail] = processRawData(...
         end
     end
 
+    if nargin == 6
+        wait = true;
+    end
+
     if strcmp(settings.operation_mode, 'online')
         if ~isempty(markers)
             % Wait until raw vicon data is available.
@@ -34,9 +38,11 @@ function [cycles, times, fail] = processRawData(...
                 times = 0;
                 return
             end
-            pause(4); % 4 second pause to give extra 4s of assistance - so as 
-                      % not to confuse subject with audio feedback while 
-                      % still recording
+            if wait
+                pause(4); % 4 second pause to give extra 4s of assistance - so as 
+                          % not to confuse subject with audio feedback while 
+                          % still recording
+            end
             processViconData(trial_name);
         else
             [path, name, ~] = fileparts(grfs);

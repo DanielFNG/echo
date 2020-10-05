@@ -45,7 +45,7 @@ if strcmp(settings.baseline_mode, 'absolute')
     osim_dir = [settings.dirs.opensim filesep 'baseline'];
     assistance_params = [];
     [cycles, times] = processRawData(markers, grfs, settings.dirs.baseline, ...
-        osim_dir, settings, assistance_params);
+        osim_dir, settings, assistance_params, false);
     
     switch settings.data_inputs
         case 'EMG'
