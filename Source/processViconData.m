@@ -21,7 +21,7 @@ function processViconData(trial)
 
     vicon.RunPipeline('Export GRF Full Frames Only', '', timeout);
     vicon.RunPipeline('Export TRC Full Frames Only', '', timeout);
-    vicon.RunPipeline('Export APO Torques');
+    vicon.RunPipeline('Export APO Torques', '', timeout);
     vicon.SaveTrial(timeout);
     
     % Tell the Vicon PC to go live again.
