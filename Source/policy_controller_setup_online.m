@@ -7,14 +7,14 @@ settings.operation_mode = 'online';
 settings.apo_torques = 'measured';
 
 % Root directory (may change between PC's)
-settings.root_dir = '';
+settings.root_dir = 'N:\Shared_Data\HIL\New APO';
 
 % Subject specific settings.
-settings.subject_id = ;
-settings.mass = ;
+settings.subject_id = 6;
+settings.mass = 84.3;
 settings.combined_mass = settings.mass + 6.7;  % APO + accessories = 6.7kg
-settings.leg_length = ;
-settings.toe_length = ;
+settings.leg_length = 0.92;
+settings.toe_length = 0.08;
 
 % Co-ordinate system offsets - calculate these using motion function.
 settings.x_offset = 0;
@@ -24,7 +24,6 @@ settings.z_offset = 0;
 %% The stuff that probably doesn't have to change/be looked over.
 
 % Subject-related experiment parameter calculations
-settings.speed = 1.2*sqrt(0.1*9.81*settings.leg_length);
 settings.force = 10;  % Change to using fixed mass for next 4 subjects
 
 % Data directory
@@ -138,6 +137,15 @@ else
     createScaledModel(settings);
     [settings.model, markers, grf] = createAdjustedModel(settings);
 end
+
+% Compute & report leg length in m
+static = Data([settings.base_dir filesep settings.static_folder ...
+    filesep settings.static_file]);
+static.convertUnits('m');
+settings.leg_length = round(mean(static.getColumn('RJHC_Y') - ...
+    static.getColumn('RAJC_Y')), 2);
+settings.speed = 1.2*sqrt(0.1*9.81*settings.leg_length);
+fprintf('Leg length computed as %.2fm.\n', settings.leg_length);
 
 %% Run HIL optimisation
 
