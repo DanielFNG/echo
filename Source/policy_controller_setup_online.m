@@ -121,6 +121,15 @@ if strcmp(settings.operation_mode, 'online')
     input(['Ensure the ''' settings.static_file ''' file has been created.\n' ...
         'Input any key to continue.\n']);
     createScaledModel(settings);
+    
+    % Compute & report leg length in m
+    static = Data([settings.base_dir filesep settings.static_folder ...
+        filesep settings.static_file]);
+    static.convertUnits('m');
+    settings.leg_length = round(mean(static.getColumn('RHJC_Y') - ...
+        static.getColumn('RAJC_Y')), 2);
+    settings.speed = 1.2*sqrt(0.1*9.81*settings.leg_length);
+    fprintf('Leg length computed as %.2fm.\n', settings.leg_length);
 
     % OpenSim model adjusted.
     input(['Ensure the inital unassisted ''' settings.initial_walk ''' data has '...
@@ -134,18 +143,21 @@ if strcmp(settings.operation_mode, 'online')
     cadence = computeDesiredCadence(settings, markers, grf);
     fprintf('Cadence calculation completed - set metronome to %i BPM.\n', cadence);
 else
+    
     createScaledModel(settings);
+    
+    % Compute & report leg length in m
+    static = Data([settings.base_dir filesep settings.static_folder ...
+        filesep settings.static_file]);
+    static.convertUnits('m');
+    settings.leg_length = round(mean(static.getColumn('RHJC_Y') - ...
+        static.getColumn('RAJC_Y')), 2);
+    settings.speed = 1.2*sqrt(0.1*9.81*settings.leg_length);
+    fprintf('Leg length computed as %.2fm.\n', settings.leg_length);
+    
+    
     [settings.model, markers, grf] = createAdjustedModel(settings);
 end
-
-% Compute & report leg length in m
-static = Data([settings.base_dir filesep settings.static_folder ...
-    filesep settings.static_file]);
-static.convertUnits('m');
-settings.leg_length = round(mean(static.getColumn('RJHC_Y') - ...
-    static.getColumn('RAJC_Y')), 2);
-settings.speed = 1.2*sqrt(0.1*9.81*settings.leg_length);
-fprintf('Leg length computed as %.2fm.\n', settings.leg_length);
 
 %% Run HIL optimisation
 
