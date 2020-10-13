@@ -60,6 +60,7 @@ settings.marker_system.Right = '-x';
 settings.grf_system.Forward = '+y';
 settings.grf_system.Up = '-z';
 settings.grf_system.Right = '+x';
+settings.max_trials = feature('numcores');
 
 % Valid ranges for the control parameters. NOTE: if
 % multiplier*min_rise_range is less than 10, we will have problems with the

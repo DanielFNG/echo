@@ -92,11 +92,10 @@ function [cycles, times, fail] = processRawData(...
                 osim_dir, []);
     end
     
-    % Temporary measure to restrict ourselves to <= 8 trials - expanded
-    % from 4 to 8 due to PC upgrade.
-    max_trials = 8;
-    if length(trials) > max_trials
-        trials = trials(end - max_trials + 1:end);
+    % For time-savings, restrict to the number of trials you can compute in
+    % 1 CPU cycle. 
+    if length(trials) > settings.max_trials
+        trials = trials(end - settings.max_trials + 1:end);
     end
     
     [trials, outputs] = runBatchParallel(... % outputs will be useful for SO quantifying
