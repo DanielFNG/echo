@@ -98,6 +98,20 @@ function [cycles, times, fail] = processRawData(...
         trials = trials(end - settings.max_trials + 1:end);
     end
     
+%     % Run IK first
+%     [trials, ~] = runBatchParallel('IK', trials);
+%     
+%     % Prune trials with bad tracking
+%     good_trials = ones(1, length(trials));
+%     parfor i = 1:length(trials)
+%         error_data = Data([trials{i}.results_paths.IK filesep 'default_ik_marker_errors.sto']);
+%         if mean(error_data.getColumn('total_squared_error')) > 0.01
+%             good_trials(i) = 0;
+%         end
+%     end
+%     trials = trials(good_trials);
+    
+    % Now run SO
     [trials, outputs] = runBatchParallel(... % outputs will be useful for SO quantifying
         settings.opensim_analyses, trials, settings.opensim_args{:});
             
