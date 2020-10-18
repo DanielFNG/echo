@@ -38,6 +38,8 @@ function result = generalObjectiveFunction(X, settings)
             filesep 'iteration' sprintf('%03i', G__iteration)];
         paths.directories.opensim_inner = [settings.dirs.opensim ...
             filesep 'iteration' sprintf('%03i', G__iteration)];
+        paths.directories.motions_inner = [settings.dirs.motions ...
+            filesep 'iteration' sprintf('%03i', G__iteration)];
     end
 
     % Convert control parameters.
@@ -78,6 +80,12 @@ function result = generalObjectiveFunction(X, settings)
     [cycles, times, fail] = processRawData(paths.files.markers, ...
         paths.files.grfs, paths.directories.segmented_inner, ...
         paths.directories.opensim_inner, settings, paths.files.apo);
+    
+    % Save gait cycles 
+    if strcmp(settings.baseline_mode, 'relative')
+        save([paths.directories.motions_inner '.mat'], 'baseline_cycles');
+    end
+    save([paths.directories.motions_inner '.mat'], 'cycles');
     
     if fail
         result = 600;

@@ -10,9 +10,8 @@ global vicon_server_connection;
 settings.dirs.baseline = [settings.base_dir filesep 'baseline'];
 settings.dirs.segmented = [settings.base_dir filesep 'processed'];
 settings.dirs.opensim = [settings.base_dir filesep 'opensim'];
-if strcmp(settings.operation_mode, 'online')
-    createDirectories(settings.dirs);
-end
+settings.dirs.motions = [settings.base_dir filesep 'motions_' settings.operation_mode];
+createDirectories(settings.dirs);
 
 if strcmp(settings.baseline_mode, 'absolute')
     
