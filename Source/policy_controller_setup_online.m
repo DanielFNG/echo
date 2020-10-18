@@ -170,5 +170,12 @@ if strcmp(settings.operation_mode, 'online')
         'wide monitor, and is live, armed and locked.\nAll setup steps '...
         'completed - input any key when ready to begin HIL policy controller.']);
 end
+
+% Save settings info
+if strcmp(settings.operation_mode, 'online')
+    settings_folder = [settings.base_dir filesep 'settings'];
+    mkdir(settings_folder);
+    save([settings_folder filsep datestr(datetime('now'), 'yy-mm-dd-HH:MM')], 'settings');
+end
 runPolicyController(settings);
 
