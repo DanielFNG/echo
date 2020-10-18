@@ -40,6 +40,8 @@ function result = generalObjectiveFunction(X, settings)
             filesep 'iteration' sprintf('%03i', G__iteration)];
         paths.directories.motions_inner = [settings.dirs.motions ...
             filesep 'iteration' sprintf('%03i', G__iteration)];
+        paths.directories.logs_inner = [settings.dirs.motions ...
+            filesep 'iteration' sprintf('%03i', G__iteration)];
     end
 
     % Convert control parameters.
@@ -71,21 +73,23 @@ function result = generalObjectiveFunction(X, settings)
     
     % Obtain gait cycles from raw data processing.
     if strcmp(settings.baseline_mode, 'relative')
-        [baseline_cycles, ~, ~] = processRawData(...
+        [baseline_cycles, ~, ~, baseline_output] = processRawData(...
             baseline_paths.files.markers, baseline_paths.files.grfs, ...
             baseline_paths.directories.segmented_inner, ...
             baseline_paths.directories.opensim_inner, ...
             settings, baseline_paths.files.apo, false);
     end
-    [cycles, times, fail] = processRawData(paths.files.markers, ...
+    [cycles, times, fail, output] = processRawData(paths.files.markers, ...
         paths.files.grfs, paths.directories.segmented_inner, ...
         paths.directories.opensim_inner, settings, paths.files.apo);
     
-    % Save gait cycles 
+    % Save gait cycles & logs
     if strcmp(settings.baseline_mode, 'relative')
         save([paths.directories.motions_inner '.mat'], 'baseline_cycles');
+        save([paths.directories.logs_inner '.mat'], 'baseline_output');
     end
     save([paths.directories.motions_inner '.mat'], 'cycles');
+    save([paths.directories.logs_inner '.mat'], 'output');
     
     if fail
         result = 600;

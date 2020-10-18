@@ -10,7 +10,10 @@ global vicon_server_connection;
 settings.dirs.baseline = [settings.base_dir filesep 'baseline'];
 settings.dirs.segmented = [settings.base_dir filesep 'processed'];
 settings.dirs.opensim = [settings.base_dir filesep 'opensim'];
-settings.dirs.motions = [settings.base_dir filesep 'motions_' settings.operation_mode];
+settings.dirs.motions = [settings.base_dir filesep 'motions' filesep ...
+    settings.operation_mode];
+settings.dirs.logs = [settings.base_dir filesep 'logs' filesep ...
+    settings.operation_mode];
 createDirectories(settings.dirs);
 
 if strcmp(settings.baseline_mode, 'absolute')
@@ -43,7 +46,7 @@ if strcmp(settings.baseline_mode, 'absolute')
     % Obtain gait cycles from raw data processing.
     osim_dir = [settings.dirs.opensim filesep 'baseline'];
     assistance_params = [];
-    [cycles, times] = processRawData(markers, grfs, settings.dirs.baseline, ...
+    [cycles, times, ~, ~] = processRawData(markers, grfs, settings.dirs.baseline, ...
         osim_dir, settings, assistance_params, false);
     
     switch settings.data_inputs
