@@ -12,7 +12,7 @@ settings.root_dir = 'N:\Shared_Data\HIL\New APO';
 % Subject specific settings.
 settings.subject_id = 6;
 settings.mass = 84.3;
-settings.combined_mass = settings.mass + 6.7;  % APO + accessories = 6.7kg
+settings.combined_mass = settings.mass + 6.8;  % APO + accessories = 6.8kg
 settings.leg_length = 0.92;
 settings.toe_length = 0.08;
 
