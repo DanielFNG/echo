@@ -38,10 +38,6 @@ function result = generalObjectiveFunction(X, settings)
             filesep 'iteration' sprintf('%03i', G__iteration)];
         paths.directories.opensim_inner = [settings.dirs.opensim ...
             filesep 'iteration' sprintf('%03i', G__iteration)];
-        paths.directories.motions_inner = [settings.dirs.motions ...
-            filesep 'iteration' sprintf('%03i', G__iteration)];
-        paths.directories.logs_inner = [settings.dirs.motions ...
-            filesep 'iteration' sprintf('%03i', G__iteration)];
     end
 
     % Convert control parameters.
@@ -84,12 +80,17 @@ function result = generalObjectiveFunction(X, settings)
         paths.directories.opensim_inner, settings, paths.files.apo);
     
     % Save gait cycles & logs
+    paths.directories.motions_inner = [settings.dirs.motions ...
+            filesep 'iteration' sprintf('%03i', G__iteration)];
+    paths.directories.logs_inner = [settings.dirs.logs ...
+        filesep 'iteration' sprintf('%03i', G__iteration)];
     if strcmp(settings.baseline_mode, 'relative')
-        save([paths.directories.motions_inner '.mat'], 'baseline_cycles');
-        save([paths.directories.logs_inner '.mat'], 'baseline_output');
+        save([paths.directories.motions_inner '.mat'], 'baseline_cycles', 'cycles');
+        save([paths.directories.logs_inner '.mat'], 'baseline_output', 'output');
+    else
+        save([paths.directories.motions_inner '.mat'], 'cycles');
+        save([paths.directories.logs_inner '.mat'], 'output');
     end
-    save([paths.directories.motions_inner '.mat'], 'cycles');
-    save([paths.directories.logs_inner '.mat'], 'output');
     
     if fail
         result = 600;
