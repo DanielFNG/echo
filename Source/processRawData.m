@@ -76,6 +76,51 @@ function [cycles, times, fail, outputs] = processRawData(...
             rethrow(err);
         end
     end
+    
+%     % Marker correction
+%     adjust_markers = settings.adjustment_markers;
+%     adjust_means = settings.adjustment_means;
+%     for i = 1:length(settings.feet)
+%         marker_folder = [save_dir filesep settings.feet{i} filesep 'Markers'];
+%         [n_files, marker_paths] = getFilePaths(marker_folder, '.trc');
+%         for j = 1:n_files
+%             marker_data = Data(marker_paths{j});
+%             for k = 1:length(adjust_markers)
+%                 traj = marker_data.getColumn(adjust_markers{k});
+%                 current_mean = mean(traj);
+%                 diff = adjust_means(k) - current_mean;
+%                 marker_data.setColumn(adjust_markers{k}, traj + diff);
+%             end
+%             marker_data.writeToFile(marker_paths{j});
+%         end
+%     end
+%     
+%     % Relative marker correction
+%     relative_markers = settings.relative_adjustment_markers;
+%     relative_base = settings.relative_adjustment_baseline;
+%     relative_offsets = settings.relative_adjustment_offsets;
+%     for i = 1:length(settings.feet)
+%         marker_folder = [save_dir filesep settings.feet{i} filesep 'Markers'];
+%         [n_files, marker_paths] = getFilePaths(marker_folder, '.trc');
+%         for j = 1:n_files
+%             marker_data = Data(marker_paths{j});
+%             base_mean_x = mean(marker_data.getColumn([relative_base '_X']));
+%             base_mean_z = mean(marker_data.getColumn([relative_base '_Z']));
+%             for k = 1:length(relative_markers)
+%                 traj_x = marker_data.getColumn([relative_markers{k} '_X']);
+%                 traj_z = marker_data.getColumn([relative_markers{k} '_Z']);
+%                 current_offset_x = mean(traj_x) - base_mean_x;
+%                 current_offset_z = mean(traj_z) - base_mean_z;
+%                 offset_diff_x = relative_offsets.x(k) - current_offset_x;
+%                 offset_diff_z = relative_offsets.z(k) - current_offset_z;
+%                 marker_data.setColumn([relative_markers{k} '_X'], ...
+%                     traj_x + offset_diff_x);
+%                 marker_data.setColumn([relative_markers{k} '_Z'], ...
+%                     traj_z + offset_diff_z);
+%             end
+%             marker_data.writeToFile(marker_paths{j});
+%         end
+%     end
 
     % Run appropriate OpenSim analyses.
     markers_folder = [save_dir filesep 'right' filesep 'Markers'];

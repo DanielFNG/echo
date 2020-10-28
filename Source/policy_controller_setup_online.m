@@ -170,6 +170,15 @@ if strcmp(settings.operation_mode, 'online')
         'completed - input any key when ready to begin HIL policy controller.']);
 end
 
+% Compute marker height adjustment
+settings.adjustment_markers = {'Clavicle_Y', 'R_Acromium_Y', 'L_Acromium_Y', ...
+    'V_Sacral_Y', 'R_ASIS_Y', 'L_ASIS_Y'};
+settings.adjustment_means = computeMarkerAdjustments(settings);
+settings.relative_adjustment_markers = {'Clavicle', 'R_Acromium', ...
+    'L_Acromium', 'R_ASIS', 'L_ASIS'};
+settings.relative_adjustment_baseline = 'V_Sacral';
+settings.relative_adjustment_offsets = computeRelativeMarkerOffsets(settings);
+
 % Save settings info
 if strcmp(settings.operation_mode, 'online')
     settings_folder = [settings.base_dir filesep 'settings'];
