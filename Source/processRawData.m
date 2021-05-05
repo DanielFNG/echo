@@ -94,7 +94,7 @@ function [cycles, times, fail, outputs] = processRawData(...
 %             marker_data.writeToFile(marker_paths{j});
 %         end
 %     end
-%     
+    
 %     % Relative marker correction
 %     relative_markers = settings.relative_adjustment_markers;
 %     relative_base = settings.relative_adjustment_baseline;
@@ -175,5 +175,9 @@ function [cycles, times, fail, outputs] = processRawData(...
     else
         cycles = 0;
     end
+    
+    % Close parpool to save memory
+    poolobj = gcp('nocreate');
+    delete(poolobj);
 
 end
