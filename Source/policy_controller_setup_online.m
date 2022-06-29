@@ -59,7 +59,7 @@ settings.marker_system.Right = '-x';
 settings.grf_system.Forward = '+y';
 settings.grf_system.Up = '-z';
 settings.grf_system.Right = '+x';
-settings.max_trials = feature('numcores');
+settings.max_trials = 50;
 
 % Valid ranges for the control parameters. NOTE: if
 % multiplier*min_rise_range is less than 10, we will have problems with the
@@ -81,19 +81,19 @@ settings.save_file = [settings.base_dir filesep 'hil-results.mat'];
 settings.offline_save_file = [settings.base_dir filesep 'hil-results-offline.mat'];
 
 % Data filestructure.
-settings.name = 'capture';
-settings.format = '%03i';  % # of leading 0's in Vicon filenames 
+settings.name = 'walk';
+settings.format = '%02i';  % # of leading 0's in Vicon filenames 
 settings.model_name = 'model.osim';
 settings.adjusted_model_name = 'model_adjusted.osim';
 settings.model_folder = 'Models';
-settings.static_file = ['S' num2str(settings.subject_id) ' Cal 01.trc'];
+settings.static_file = ['S11 Cal 01.trc'];
 settings.static_folder = 'Static';
 settings.initial_walk = 'walk';
 settings.cadence_folder = 'Cadence';
 
 % Bayesian optimisation settings. 
-settings.iter_func = @(x) x;
-settings.max_iterations = 24;
+settings.iter_func = @(x) x - 1;
+settings.max_iterations = 81;
 settings.num_seed_points = 12;  % fully randomised measurements first
 settings.acquisition_function = 'expected-improvement-plus';
 settings.bayesopt_args = {'ExplorationRatio', 0.5};  % stuff like exploration 
@@ -157,6 +157,7 @@ else
     
     
     [settings.model, markers, grf] = createAdjustedModel(settings);
+    %settings.model = [settings.base_dir filesep settings.model_folder filesep settings.adjusted_model_name];
 end
 
 %% Run HIL optimisation
