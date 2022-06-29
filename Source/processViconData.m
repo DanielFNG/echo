@@ -4,6 +4,10 @@ function processViconData(trial)
 
     vicon = ViconNexus();
     
+    % Tell the Vicon PC to refresh Eclipse
+    global vicon_server_connection;
+    fwrite(vicon_server_connection, '000', 'uchar');
+    
     try
         vicon.OpenTrial(trial, timeout);
     catch
@@ -25,7 +29,6 @@ function processViconData(trial)
     vicon.SaveTrial(timeout);
     
     % Tell the Vicon PC to go live again.
-    global vicon_server_connection;
     fwrite(vicon_server_connection, '0', 'uchar');
 
 end
